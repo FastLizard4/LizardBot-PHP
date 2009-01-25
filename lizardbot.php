@@ -28,17 +28,16 @@ $c_b_light_bold = chr(27) . "[01;47m";
 | |___  __| |__   ___/ /__ | |______| | | |  \  \  | |_| |
 |_____||_______| |________||_|      |_| |_|   \__\ |____/
 
-FastLizard4's IRC bot developed by FastLizard4 (who else?)
+PHP-LizardBot: IRC bot developed by FastLizard4 (who else?) and the LizardBot Development Team
 Version 5.4.0.5b (major.minor.build.revision) BETA
 Licensed under the Creative Commons GNU General Public License 2.0 (GPL)
 For licensing details, contact me or read this page:
 http://creativecommons.org/licenses/GPL/2.0/
-REPORT BUGS AND SUGGESTIONS TO FastLizard4
-I can be contacted on the Freenode IRC network as FastLizard4.
+REPORT BUGS AND SUGGESTIONS TO BUGZILLA (http://scalar.cluenet.org/~fastlizard4/bugzilla)
 
 LICENSING DETAILS:
-PHP-LizardBot (IRC bot) written by FastLizard4
-Copyright (C) 2008 FastLizard4
+PHP-LizardBot (IRC bot) written by FastLizard4 and the LizardBot Development Team
+Copyright (C) 2008 FastLizard4 and the LizardBot Development Team
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License

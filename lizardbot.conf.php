@@ -137,7 +137,8 @@ die(">>>PLEASE CONFIGURE THE BOT CORRECTLY!\r\n");
 #                       BLOCK                   #
 #################################################
 ##CTCP Configuration
-   $setCTCPVersion = "LizardBot-1 (Written in PHP 5 Procedural by FastLizard4) v{$version} - PM my master for more information";
+   $setCTCPVersion = "LizardBot-1 (Written in PHP 5 Procedural by FastLizard4 and the LizardBot Development Team) v{$version} - PM 
+my master for more information";
       $setCTCPTime = "My my, aren't we nosy? :P";
   $setCTCPUserinfo = "LizardBot-1: Boldly Going Where No Bot Has Gone Before!";
 $setCTCPClientinfo = "I am LizardBot-1.  I support these CTCP commands: VERSION TIME USERINFO CLIENTINFO";
