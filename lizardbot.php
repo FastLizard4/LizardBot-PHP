@@ -29,7 +29,7 @@ $c_b_light_bold = chr(27) . "[01;47m";
 |_____||_______| |________||_|      |_| |_|   \__\ |____/
 
 PHP-LizardBot: IRC bot developed by FastLizard4 (who else?) and the LizardBot Development Team
-Version 5.4.0.5b (major.minor.build.revision) BETA
+Version 5.4.0.6b (major.minor.build.revision) BETA
 Licensed under the Creative Commons GNU General Public License 2.0 (GPL)
 For licensing details, contact me or read this page:
 http://creativecommons.org/licenses/GPL/2.0/
@@ -65,7 +65,7 @@ PandoraBot extension courtesy of Ttech (PHP-5 OOP)
 <?php
 //Check for updates
 echo chr(27) . "[01;93mChecking for updates...\r\n";
-$version = "5.4.0.5b";
+$version = "5.4.0.6b";
 $upfp = @fopen('http://scalar.cluenet.org/~fastlizard4/latest.php', 'r');
 $data = @fgets($upfp);
 @fclose($upfp);
@@ -410,14 +410,17 @@ Socket to {$irc['address']} opened on port {$irc['port']}...\n
 Socket ID is: $n\n
 -!- CONNECTING TO {$irc['address']}:{$irc['port']} ...\n
 CONSOLEOUTPUT;
+echo <<<STDOUT
+Sleeping for 5 seconds to make sure we're connected before registering...\r\n
+STDOUT;
+sleep(5);
 }
 }
 if(!$setIdent) $setIdent = "bot";
 if(!$setGecos) $setGecos = "bot";
 if($fp[$n]) {
 	$connected = false;
-	for($i = 2; $i <=2; $i++) {
-		sleep(5);
+	for($i = 1; $i <=2; $i++) {
 		global $fp;
 		fwrite($fp[$n], "USER $setIdent bot bot :$setGecos\r\n");
 		echo <<<IRCO
@@ -427,15 +430,22 @@ IRCO;
 		echo <<<IRCO
 -!- NICK $nick\r\n
 IRCO;
+if($i == 1) {
+	echo "Waiting 2 seconds before resending registration for good measure...\r\n";
+	sleep(2);
+}
 	}
 }
 if($irc['identify']) {
+	echo "Waiting 2 seconds before sending identification information to make sure we're registered...\r\n";
 	fwrite($fp[$n], "PRIVMSG NickServ :IDENTIFY " . $irc['ns-username'] . $irc['ns-password'] . "\r\n");
 	echo <<<IRCO
 *** ID INFO SENT
 IRCO;
 	$irc['ns-username'] = NULL;
 }
+echo "Waiting 5 seconds to make sure we're all good to begin the sync process...\r\n";
+sleep(5);
 echo <<<CONSOLEOUTPUT
 \n{$c_ul}Please enter a comma-delimited list of channels to join: 
 CONSOLEOUTPUT;
@@ -980,7 +990,7 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
         }
 	if($d[3] == "{$setTrigger}update" && hasPriv('*')) {
 		echo "Checking for updates...\r\n";
-		$version = "5.4.0.5b";
+		$version = "5.4.0.6b";
 		$upfp = @fopen('http://scalar.cluenet.org/~fastlizard4/latest.php', 'r');
 		$data = @fgets($upfp);
 		@fclose($upfp);
