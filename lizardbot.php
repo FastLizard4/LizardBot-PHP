@@ -411,7 +411,7 @@ Socket ID is: $n\n
 -!- CONNECTING TO {$irc['address']}:{$irc['port']} ...\n
 CONSOLEOUTPUT;
 echo <<<STDOUT
-Sleeping for 5 seconds to make sure we're connected before registering...\r\n
+Sleeping for 5 seconds to make sure we are connected before registering...\r\n
 STDOUT;
 sleep(5);
 }
