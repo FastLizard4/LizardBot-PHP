@@ -1199,7 +1199,13 @@ STDOUT;
 		unset($toGoogle);
 		unset($googleURL);
 		if(!$stopExecution) {
-			$data =  $googleOut5[0];
+			$predata =  $googleOut5[0];
+			$predata2 = html_entity_decode($predata);
+			$predata3 = str_replace("<sup>", "^", $predata2);
+			$data = strip_tags($predata3);
+			unset($predata);
+			unset($predata2);
+			unset($predata3);
 		}
 		unset($googleOut5);
 		$target = explode("!", $tt);
