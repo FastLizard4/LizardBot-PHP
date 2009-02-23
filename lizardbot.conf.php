@@ -89,9 +89,9 @@ $privgroups[ '*'         ][ 'nyse'        ] = 1;
 $privgroups[ '*'         ][ 'fantasy'     ] = 1;
 
 $privgroups[ 's-trusted' ]                  = $privgroups['*'];       // 's-trusted' inherits '*'
-$privgroups[ 's-trusted'   ][ 'fap'         ] = 1;
-$privgroups[ 's-trusted'   ][ 'say'         ] = 1;
-$privgroups[ 's-trusted'   ][ 'do'          ] = 1;
+$privgroups[ 's-trusted' ][ 'fap'         ] = 1;
+$privgroups[ 's-trusted' ][ 'say'         ] = 1;
+$privgroups[ 's-trusted' ][ 'do'          ] = 1;
 
 $privgroups[ 'trusted'   ]                  = $privgroups['s-trusted'];       // 'trusted' inherits 's-trusted'
 $privgroups[ 'trusted'   ][ 'join'        ] = 1;
@@ -117,8 +117,8 @@ $setFantasy = FALSE;
 #                    RECOMMENDED                #
 #                       BLOCK                   #
 #################################################
-  $setIdent = "bot";
-  $setGecos = "LizardBot-1 v{$version}";
+  $setIdent = "LizardBot";
+  $setGecos = "PHP-LizardBot v{$version} - http://scalar.cluenet.org/~fastlizard4/lizardbot.php";
 $setTrigger = "@";
 
 #################################################
@@ -137,11 +137,10 @@ die(">>>PLEASE CONFIGURE THE BOT CORRECTLY!\r\n");
 #                       BLOCK                   #
 #################################################
 ##CTCP Configuration
-   $setCTCPVersion = "LizardBot-1 (Written in PHP 5 Procedural by FastLizard4 and the LizardBot Development Team) v{$version} - PM 
-my master for more information";
+   $setCTCPVersion = "PHP-LizardBot (Written in PHP 5 Procedural by FastLizard4 and the LizardBot Development Team) v{$version} http://scalar.cluenet.org/~fastlizard4/lizardbot.php";
       $setCTCPTime = "My my, aren't we nosy? :P";
-  $setCTCPUserinfo = "LizardBot-1: Boldly Going Where No Bot Has Gone Before!";
-$setCTCPClientinfo = "I am LizardBot-1.  I support these CTCP commands: VERSION TIME USERINFO CLIENTINFO";
+  $setCTCPUserinfo = "PHP-LizardBot: Boldly Going Where No Bot Has Gone Before! - http://scalar.cluenet.org/~fastlizard4/lizardbot.php";
+$setCTCPClientinfo = "I am PHP-LizardBot version {$version}.  I support these CTCP commands: VERSION TIME USERINFO CLIENTINFO";
 $setUnknownCTCP_RE = NULL; //Not yet implemented
 
        $setNoBolds = FALSE;
