@@ -1163,6 +1163,7 @@ STDOUT;
 		*      $tnick: Target nick
 		*         $tt: Placeholder
 		*/
+		$stopExecution = FALSE;
 		$tt = $d[0];
 		$d[0] = NULL;
 		$d[1] = NULL;
@@ -1183,18 +1184,23 @@ STDOUT;
 		unset($google);
 		if(!stristr($googleOut, '<img src=/images/calc_img.gif width=40 height=30 alt="">')) {
 			$data = "Error: An invalid calculation was specified.";
+			$stopExecution = TRUE;
 		}
-		$googleOut2 = explode("<div id=res", $googleOut);
-		$googleOut3 = explode("<font size=-1", $googleOut2[1]);
-		$googleOut4 = explode("<b>", $googleOut3[0]);
-		$googleOut5 = explode("</b>", $googleOut4[1]);
+		if(!$stopExecution) {
+			$googleOut2 = explode("<div id=res", $googleOut);
+			$googleOut3 = explode("<font size=-1", $googleOut2[1]);
+			$googleOut4 = explode("<b>", $googleOut3[0]);
+			$googleOut5 = explode("</b>", $googleOut4[1]);
+		}
 		unset($googleOut2);
 		unset($googleOut3);
 		unset($googleOut4);
 		unset($googleOut);
 		unset($toGoogle);
 		unset($googleURL);
-		$data =  $googleOut5[0];
+		if(!$stopExecution) {
+			$data =  $googleOut5[0];
+		}
 		unset($googleOut5);
 		$target = explode("!", $tt);
 		$e = $target[0] . ": ";
@@ -1212,6 +1218,7 @@ STDOUT;
 		unset($data);
 		unset($tt);
 		unset($tnick);
+		unset($stopExecution);
 	}
 }
 if($d[3] == "{$setTrigger}mute" && hasPriv('mute')) {
