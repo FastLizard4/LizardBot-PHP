@@ -1193,7 +1193,7 @@ STDOUT;
 		unset($googleOut4);
 		unset($googleOut);
 		unset($toGoogle);
-		unset($googleURL)
+		unset($googleURL);
 		$data =  $googleOut5[0];
 		unset($googleOut5);
 		$target = explode("!", $tt);
