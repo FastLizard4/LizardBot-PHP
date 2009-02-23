@@ -71,7 +71,7 @@ $setMySQLDefaultDB: Set the default database in MySQL.  Recommended, but not nee
 #                       BLOCK                   #
 #################################################
 ##Nickname configuration
-$nickname = "LizardBot-1";
+$nickname = "";
 
 ##Users Configuration
 //	Nick!User@Host mask						=> group
