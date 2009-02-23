@@ -29,7 +29,7 @@ $c_b_light_bold = chr(27) . "[01;47m";
 |_____||_______| |________||_|      |_| |_|   \__\ |____/
 
 PHP-LizardBot: IRC bot developed by FastLizard4 (who else?) and the LizardBot Development Team
-Version 5.4.0.6b (major.minor.build.revision) BETA
+Version 5.5.0.0b (major.minor.build.revision) BETA
 Licensed under the Creative Commons GNU General Public License 2.0 (GPL)
 For licensing details, contact me or read this page:
 http://creativecommons.org/licenses/GPL/2.0/
@@ -65,7 +65,7 @@ PandoraBot extension courtesy of Ttech (PHP-5 OOP)
 <?php
 //Check for updates
 echo chr(27) . "[01;93mChecking for updates...\r\n";
-$version = "5.4.0.6b";
+$version = "5.5.0.0b";
 $upfp = @fopen('http://scalar.cluenet.org/~fastlizard4/latest.php', 'r');
 $data = @fgets($upfp);
 @fclose($upfp);
@@ -990,7 +990,7 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
         }
 	if($d[3] == "{$setTrigger}update" && hasPriv('*')) {
 		echo "Checking for updates...\r\n";
-		$version = "5.4.0.6b";
+		$version = "5.5.0.0b";
 		$upfp = @fopen('http://scalar.cluenet.org/~fastlizard4/latest.php', 'r');
 		$data = @fgets($upfp);
 		@fclose($upfp);
@@ -1151,6 +1151,67 @@ STDOUT;
                 fwrite($ircc, "PRIVMSG $c :" . $e . $outtoirc . "\r\n");
                 echo "-!- PRIVMSG $c :" . $e . $outtoirc . "\r\n";
 		unset($color);
+	}
+	if($d[3] == "{$setTrigger}gcalc" && hasPriv('*') && $setTrustGoogle) {
+		/*
+		* VARIABLES
+		*   $toGoogle: Data to be sent to Google
+		*     $google: Fp for Google
+		*  $googleURL: The URL we should connect to
+		*       $data: Data to be returned to IRC
+		* $googleOutn: Data from Google
+		*      $tnick: Target nick
+		*         $tt: Placeholder
+		*/
+		$tt = $d[0];
+		$d[0] = NULL;
+		$d[1] = NULL;
+		$tnick = $d[2];
+		$d[2] = NULL;
+		$d[3] = NULL;
+		$toGoogle = implode(" ", $d);
+		$googleURL = 'http://www.google.com/search?q=' . urlencode($toGoogle);
+		$google = @fopen($googleURL, 'r') OR $data = "Error connecting to Google!  Oh noes!";
+		while(!feof($google)) {
+			if(!$googleOut) {
+				$googleOut = fgets($google);
+			} else {
+				$googleOut .= fgets($google);
+			}
+		}
+		fclose($google);
+		unset($google);
+		if(!stristr($googleOut, '<img src=/images/calc_img.gif width=40 height=30 alt="">')) {
+			$data = "Error: An invalid calculation was specified.";
+		}
+		$googleOut2 = explode("<div id=res", $googleOut);
+		$googleOut3 = explode("<font size=-1", $googleOut2[1]);
+		$googleOut4 = explode("<b>", $googleOut3[0]);
+		$googleOut5 = explode("</b>", $googleOut4[1]);
+		unset($googleOut2);
+		unset($googleOut3);
+		unset($googleOut4);
+		unset($googleOut);
+		unset($toGoogle);
+		unset($googleURL)
+		$data =  $googleOut5[0];
+		unset($googleOut5);
+		$target = explode("!", $tt);
+		$e = $target[0] . ": ";
+		if($tnick == $nick) {
+			$target = explode("!", $tt);
+			$c = $target[0];
+			$e = NULL;
+		} else {
+			$c = $tnick;
+		}
+		fwrite($ircc, "PRIVMSG $c :" . $e . $data . "\r\n");
+		echo "-!- PRIVMSG $c :" . $e . $data . "\r\n";
+		unset($c);
+		unset($e);
+		unset($data);
+		unset($tt);
+		unset($tnick);
 	}
 }
 if($d[3] == "{$setTrigger}mute" && hasPriv('mute')) {

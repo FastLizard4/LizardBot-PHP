@@ -65,6 +65,9 @@ $setMySQLDefaultDB: Set the default database in MySQL.  Recommended, but not nee
 
     $setEnableExec: Whether or not to enable the @exec command.  Boolean, true to enable.
     $setEnableEval: Whehter or not to enable the @eval command.  Boolean, true to enable.
+
+   $setTrustGoogle: If, for some reason, you are extremely paranoid and don't trust the Google,
+                    set this to false.  Boolean, default TRUE.
 ***************************************/
 #################################################
 #                     REQUIRED                  #
@@ -159,6 +162,8 @@ $setNSUsername = NULL;
 
 $setEnableExec = FALSE;
 $setEnableEval = FALSE;
+
+$setTrustGoogle = TRUE;
 /****************************************
 SYSTEM DEFINED FUNCTIONS - ALL SETINGS MUST GO ABOVE THIS!
 *****************************************/ 
