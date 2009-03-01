@@ -29,7 +29,7 @@ $c_b_light_bold = chr(27) . "[01;47m";
 |_____||_______| |________||_|      |_| |_|   \__\ |____/
 
 PHP-LizardBot: IRC bot developed by FastLizard4 (who else?) and the LizardBot Development Team
-Version 5.5.0.1b (major.minor.build.revision) BETA
+Version 5.5.1.0b (major.minor.build.revision) BETA
 Licensed under the Creative Commons GNU General Public License 2.0 (GPL)
 For licensing details, contact me or read this page:
 http://creativecommons.org/licenses/GPL/2.0/
@@ -65,7 +65,7 @@ PandoraBot extension courtesy of Ttech (PHP-5 OOP)
 <?php
 //Check for updates
 echo chr(27) . "[01;93mChecking for updates...\r\n";
-$version = "5.5.0.1b";
+$version = "5.5.1.0b";
 $upfp = @fopen('http://scalar.cluenet.org/~fastlizard4/latest.php', 'r');
 $data = @fgets($upfp);
 @fclose($upfp);
@@ -179,12 +179,24 @@ $rehash = FALSE;
 function tr(&$var) {
 	$var = trim($var);
 }
+echo "Determining what configuration file we should use...\r\n";
+$dir = $_SERVER['argv'][1];
+$cfg = FALSE;
+if(!$dir) {
+	$dir = 'lizardbot.conf.php';
+	$cfg = TRUE; 
+}
+if($cfg) {
+	echo "{$c_green}Will use the default configuration file, {$dir}{$c_n}"
+} else {
+	echo "{$c_green}Will use the user-specified config file {$dir}{$c_n}";
+}
 echo "Preparing signal handlers...\r\n";
 declare(ticks = 1);
 function SIGHUP() {
 	echo "-!- Caught SIGHUP (1), now rehasing\r\n";
 	$rehash = TRUE;
-	include('lizardbot.conf.php');
+	include($dir);
 	$rehash = FALSE;
 	echo "-!- Rehash complete.\r\n";
 }
@@ -229,7 +241,7 @@ echo "Success!\r\n";
 //PHP Bot for FastLizard4
 echo "Welcome to the interface for LizardBot-1!\r\n";
 echo "Loading essential config files...\r\n";
-require('lizardbot.conf.php');
+require($dir);
 echo "OK!\r\n";
 echo "Verifying required settings are present...\r\n";
 if(!$users) {
@@ -746,7 +758,7 @@ IRCO;
 		fwrite($ircc, "PRIVMSG $target :Rehashing...\r\n");
 		echo "PRIVMSG $target :Rehashing...\r\n";
 		$rehash = true;
-		include('lizardbot.conf.php');
+		include($dir);
 		echo "Rehashed!\r\n";
 		fwrite($ircc, "PRIVMSG $target :Rehashed config file.\r\n");
 		echo "PRIVMSG $target :Rehashed config file.\r\n";
@@ -990,7 +1002,7 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
         }
 	if($d[3] == "{$setTrigger}update" && hasPriv('*')) {
 		echo "Checking for updates...\r\n";
-		$version = "5.5.0.1b";
+		$version = "5.5.1.0b";
 		$upfp = @fopen('http://scalar.cluenet.org/~fastlizard4/latest.php', 'r');
 		$data = @fgets($upfp);
 		@fclose($upfp);
