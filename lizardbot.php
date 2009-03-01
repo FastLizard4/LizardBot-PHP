@@ -88,7 +88,7 @@ class pandorabot {
     public $botid;
     public $_Pipe; // This will be our cURL handle in a bit
     public $timout = 50;
-    public $default_responce = "Probably"; // Use the function to set this.
+    public $default_response = "Probably"; // Use the function to set this.
     private $path_url = "http://www.pandorabots.com/pandora/talk?botid="; // So we can easily change url if needed
 //    private $path_url = "http://localhost/~fastlizard4/blank.html";
 
@@ -108,16 +108,16 @@ class pandorabot {
     }
 
 
-    public function default_responce($responce=""){
-        /* Check to see if $responce is set otherwise we return the default */
-        if(isset($responce)){
-            // Check to make sure new responce is actually there
-            if(!$this->sanitize($responce) == FALSE){
-                $this->default_responce = $this->sanitize($responce); // Set Responce
+    public function default_response($response=""){
+        /* Check to see if $response is set otherwise we return the default */
+        if(isset($response)){
+            // Check to make sure new response is actually there
+            if(!$this->sanitize($response) == FALSE){
+                $this->default_response = $this->sanitize($response); // Set response
             }
         } else {
-            // No new responce set, return the already set one.
-            return $this->default_responce;
+            // No new response set, return the already set one.
+            return $this->default_response;
         }
     }
 
@@ -133,7 +133,7 @@ class pandorabot {
         if(isset($reply) && !preg_match("/^\s*$/", $reply)){
             return $this->get_say($reply);
         } elseif(!isset($reply) || preg_match("/^\s*$/", $reply)) {
-            return $this->default_responce;
+            return $this->default_response;
 	}
         curl_close($this->_Pipe);
     }
@@ -164,7 +164,7 @@ class pandorabot {
         $result = $this->sanitize($matches[1]); // Get outout and send for validation
         /* Simple Sanity Check  - Null */
             if($result == FALSE OR empty($result)){
-                return $this->default_responce();
+                return $this->default_response();
             } else {
                 return $result; // Return valid string.
             }
@@ -869,7 +869,7 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
 		$setFantasy = TRUE;
 		$ai = new pandorabot("838c59c76e36816b");
 		if(!$setAIDefaultRE) { $setAIDefaultRE = "Probably"; }
-		$ai->default_responce = $setAIDefaultRE;
+		$ai->default_response = $setAIDefaultRE;
 		$data = "Fantasy turned on!";
                 $target = explode("!", $d[0]);
                 $e = $target[0] . ": ";
@@ -903,7 +903,7 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
 		if(!$ai) {
 			$ai = new pandorabot("838c59c76e36816b");
 	                if(!$setAIDefaultRE) { $setAIDefaultRE = "Probably"; }
-	                $ai->default_responce = $setAIDefaultRE;
+	                $ai->default_response = $setAIDefaultRE;
 		}
 //		$data-ai = explode(":", $data);
 		$dataai = explode(" :", $data);
@@ -924,7 +924,7 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
 			$msg = $parsedata; // This is the message you get from IRC 
 			$ai->set_timeout(180); // 60 should be fine
 			$rofl = $ai->say($msg); // This is what you want to get back to the user. 
-			if(!$rofl || preg_match("/^\s*$/", $rofl)) { $rofl = $ai->default_responce; }
+			if(!$rofl || preg_match("/^\s*$/", $rofl)) { $rofl = $ai->default_response; }
 	                $target = explode("!", $d[0]);
         	        $e = $target[0] . ": ";
 			sleep(2);
