@@ -187,7 +187,7 @@ if(!$dir) {
 	$cfg = TRUE; 
 }
 if($cfg) {
-	echo "{$c_green}Will use the default configuration file, {$dir}{$c_n}"
+	echo "{$c_green}Will use the default configuration file, {$dir}{$c_n}";
 } else {
 	echo "{$c_green}Will use the user-specified config file {$dir}{$c_n}";
 }
