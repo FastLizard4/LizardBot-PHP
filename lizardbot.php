@@ -187,9 +187,9 @@ if(!$dir) {
 	$cfg = TRUE; 
 }
 if($cfg) {
-	echo "{$c_green}Will use the default configuration file, {$dir}{$c_n}";
+	echo "{$c_green}Will use the default configuration file, {$dir}{$c_n}\r\n";
 } else {
-	echo "{$c_green}Will use the user-specified config file {$dir}{$c_n}";
+	echo "{$c_green}Will use the user-specified config file {$dir}{$c_n}\r\n";
 }
 echo "Preparing signal handlers...\r\n";
 declare(ticks = 1);
