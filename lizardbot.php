@@ -1,24 +1,44 @@
 #!/usr/bin/php
-<?php echo chr(27) . "[00;92m"; 
-$c_n = chr(27) . "[0m";
-$c_dark = chr(27) . "[01;90m";
-$c_red = chr(27) . "[01;91m";
-$c_green = chr(27) . "[01;92m";
-$c_yellow = chr(27) . "[01;93m";
-$c_blue = chr(27) . "[01;94m";
-$c_pink = chr(27) . "[01;95m";
-$c_cyan = chr(27) . "[01;96m";
-$c_bold = chr(27) . "[01;1m";
-$c_ul = chr(27) . "[01;4m";
-$c_b_dark = chr(27) . "[01;5m";
-$c_b_light = chr(27) . "[01;7m";
-$c_b_red = chr(27) . "[01;41m";
-$c_b_green = chr(27) . "[01;42m";
-$c_b_yellow = chr(27) . "[01;43m";
-$c_b_blue = chr(27) . "[01;44m";
-$c_b_pink = chr(27) . "[01;45m";
-$c_b_cyan = chr(27) . "[01;46m";
-$c_b_light_bold = chr(27) . "[01;47m";
+<?php
+echo "Determining what configuration file we should use...\r\n";
+$dir = $_SERVER['argv'][1];
+$cfg = FALSE;
+if(!$dir) {
+	$dir = 'lizardbot.conf.php';
+	$cfg = TRUE; 
+}
+if($cfg) {
+	echo "{$c_green}Will use the default configuration file, {$dir}{$c_n}\r\n";
+} else {
+	echo "{$c_green}Will use the user-specified config file {$dir}{$c_n}\r\n";
+}
+echo "Loading essential config files...\r\n";
+$rehash = TRUE;
+require($dir);
+$rehash = FALSE;
+echo "OK!\r\n";
+if(!$setIsOnWindows) {
+	$c_n = chr(27) . "[0m";
+	$c_dark = chr(27) . "[01;90m";
+	$c_red = chr(27) . "[01;91m";
+	$c_green = chr(27) . "[01;92m";
+	$c_yellow = chr(27) . "[01;93m";
+	$c_blue = chr(27) . "[01;94m";
+	$c_pink = chr(27) . "[01;95m";
+	$c_cyan = chr(27) . "[01;96m";
+	$c_bold = chr(27) . "[01;1m";
+	$c_ul = chr(27) . "[01;4m";
+	$c_b_dark = chr(27) . "[01;5m";
+	$c_b_light = chr(27) . "[01;7m";
+	$c_b_red = chr(27) . "[01;41m";
+	$c_b_green = chr(27) . "[01;42m";
+	$c_b_yellow = chr(27) . "[01;43m";
+	$c_b_blue = chr(27) . "[01;44m";
+	$c_b_pink = chr(27) . "[01;45m";
+	$c_b_cyan = chr(27) . "[01;46m";
+	$c_b_light_bold = chr(27) . "[01;47m";
+}
+echo $c_green;
 ?>
 *******************************************************************************
  _      _______  _________  __________   _______    ____
@@ -29,7 +49,7 @@ $c_b_light_bold = chr(27) . "[01;47m";
 |_____||_______| |________||_|      |_| |_|   \__\ |____/
 
 PHP-LizardBot: IRC bot developed by FastLizard4 (who else?) and the LizardBot Development Team
-Version 5.5.1.0b (major.minor.build.revision) BETA
+Version 6.0.0.0b (major.minor.build.revision) BETA
 Licensed under the Creative Commons GNU General Public License 2.0 (GPL)
 For licensing details, contact me or read this page:
 http://creativecommons.org/licenses/GPL/2.0/
@@ -56,7 +76,7 @@ A human-readable version of the complete license is available at
 http://creativecommons.org/licenses/GPL/2.0/
 
 PandoraBot extension courtesy of Ttech (PHP-5 OOP)
-<?php echo chr(27) . "[00;94m"; ?>
+<?php echo $c_blue; ?>
 *******************************************************************************
 *KNOWN ISSUES WITH THE BOT:
  1. Private messages may not work as expected.
@@ -64,18 +84,18 @@ PandoraBot extension courtesy of Ttech (PHP-5 OOP)
 *******************************************************************************
 <?php
 //Check for updates
-echo chr(27) . "[01;93mChecking for updates...\r\n";
-$version = "5.5.1.0b";
+echo "{$c_yellow}Checking for updates...\r\n";
+$version = "6.0.0.0b";
 $upfp = @fopen('http://scalar.cluenet.org/~fastlizard4/latest.php', 'r');
 $data = @fgets($upfp);
 @fclose($upfp);
 if(!$data) {
-echo chr(27) . "[1mCheck for updates failed!" . chr(27) . "[0m\r\n";
+echo "{$_bold}Check for updates failed!{$c_n}\r\n";
 }
 if($data == $version) {
-	echo chr(27) . "[01;92m>>>>You have the latest version, {$version}<<<<" . chr(27) . "[0m\r\n";
+	echo "{$c_green}>>>>You have the latest version, {$version}<<<<{$c_n}\r\n";
 } else {
-	echo chr(27) . "[01;91m>>>>You do not have the latest version, {$data}<<<<" . chr(27) . "[0m\r\n";
+	echo "{$c_red}>>>>You do not have the latest version, {$data}<<<<{$c_n}\r\n";
 }
 /**********************************************
 BEGIN PANDORABOT
@@ -179,6 +199,48 @@ $rehash = FALSE;
 function tr(&$var) {
 	$var = trim($var);
 }
+if($setIsOnWindows) {
+	echo "Will skip signal handlers, we're running on Windows...\r\n";
+} else {
+	echo "Preparing signal handlers...\r\n";
+	declare(ticks = 1);
+	function SIGHUP() {
+		echo "-!- Caught SIGHUP (1), now rehasing\r\n";
+		$rehash = TRUE;
+		include($dir);
+		$rehash = FALSE;
+		echo "-!- Rehash complete.\r\n";
+	}
+	function SIGTERM() {
+	//        die();
+	        global $ircc, $irc;
+	        fwrite($ircc, "QUIT :Oh noes! :O Caught deadly signal 15 SIGTERM!!\r\n");
+	        echo <<<IRCO
+{$c_red}-!- QUIT :Oh noes! :O Caught deadly signal 15 SIGTERM!!\n
+*** DISCONNECTING FROM {$irc['address']}!\n
+IRCO;
+	        fclose($ircc);
+	        die("Caught SIGTERM!\n{$c_n}");
+	}
+	function SIGINT() {
+	        global $ircc, $irc;
+	        fwrite($ircc, "QUIT :Oh noes! :O Caught deadly SIGINT (^C) from terminal!!!\r\n");
+	        echo <<<IRCO
+{$c_red}-!- QUIT :Oh noes! :O Caught deadly SIGINT!!\n
+*** DISCONNECTING FROM {$irc['address']}!\n
+IRCO;
+	        fclose($ircc);
+	        die("Caught SIGINT!\n{$c_n}");
+	}
+	echo "Initializing Signal Handlers...\r\n";
+// setup signal handlers
+	pcntl_signal(SIGHUP, "SIGHUP");
+	pcntl_signal(SIGTERM, "SIGTERM");
+	pcntl_signal(SIGINT, "SIGINT");
+	echo "Success!\r\n";
+}
+//PHP Bot for FastLizard4
+echo "Welcome to the interface for LizardBot-1!\r\n";
 echo "Determining what configuration file we should use...\r\n";
 $dir = $_SERVER['argv'][1];
 $cfg = FALSE;
@@ -191,55 +253,6 @@ if($cfg) {
 } else {
 	echo "{$c_green}Will use the user-specified config file {$dir}{$c_n}\r\n";
 }
-echo "Preparing signal handlers...\r\n";
-declare(ticks = 1);
-function SIGHUP() {
-	echo "-!- Caught SIGHUP (1), now rehasing\r\n";
-	$rehash = TRUE;
-	include($dir);
-	$rehash = FALSE;
-	echo "-!- Rehash complete.\r\n";
-}
-function SIGTERM() {
-//        die();
-        global $ircc, $irc;
-        fwrite($ircc, "QUIT :Oh noes! :O Caught deadly signal 15 SIGTERM!!\r\n");
-        echo <<<IRCO
-{$c_red}-!- QUIT :Oh noes! :O Caught deadly signal 15 SIGTERM!!\n
-*** DISCONNECTING FROM {$irc['address']}!\n
-IRCO;
-        fclose($ircc);
-        die("Caught SIGTERM!\n{$c_n}");
-}
-function SIGINT() {
-        global $ircc, $irc;
-        fwrite($ircc, "QUIT :Oh noes! :O Caught deadly SIGINT (^C) from terminal!!!\r\n");
-        echo <<<IRCO
-{$c_red}-!- QUIT :Oh noes! :O Caught deadly SIGINT!!\n
-*** DISCONNECTING FROM {$irc['address']}!\n
-IRCO;
-        fclose($ircc);
-        die("Caught SIGINT!\n{$c_n}");
-}
-/*function TERM() {
-	die();
-	global $ircc, $irc;
-	fwrite($ircc, "QUIT :Oh noes! :O Caught deadly signal 15 SIGTERM!!\r\n");
-	echo <<<IRCO
--!- QUIT :Oh noes! :O Caught deadly signal 15 SIGTERM!!\n
-*** DISCONNECTING FROM {$irc['address']}!\n
-IRCO;
-	fclose($ircc);
-	die("Caught SIGTERM!\n");
-}*/	
-echo "Initializing Signal Handler...\r\n";
-// setup signal handlers
-pcntl_signal(SIGHUP, "SIGHUP");
-pcntl_signal(SIGTERM, "SIGTERM");
-pcntl_signal(SIGINT, "SIGINT");
-echo "Success!\r\n";
-//PHP Bot for FastLizard4
-echo "Welcome to the interface for LizardBot-1!\r\n";
 echo "Loading essential config files...\r\n";
 require($dir);
 echo "OK!\r\n";
@@ -791,7 +804,7 @@ IRCO;
                 fwrite($ircc, "PRIVMSG $c :" . $e . $data . "\r\n");
                 echo "-!- PRIVMSG $c :" . $e . $data . "\r\n";
 	}*/
-	if($d[3] == "{$setTrigger}info" && hasPriv('*')) {
+	if(($d[3] == "{$setTrigger}info" || $d[3] == "{$setTrigger}help") && hasPriv('*')) {
 		$target = explode("!", $d[0]);
 		$target2 = $target[0];
 		if(!stristr($d[2], "#")) {
@@ -1002,7 +1015,7 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
         }
 	if($d[3] == "{$setTrigger}update" && hasPriv('*')) {
 		echo "Checking for updates...\r\n";
-		$version = "5.5.1.0b";
+		$version = "6.0.0.0b";
 		$upfp = @fopen('http://scalar.cluenet.org/~fastlizard4/latest.php', 'r');
 		$data = @fgets($upfp);
 		@fclose($upfp);

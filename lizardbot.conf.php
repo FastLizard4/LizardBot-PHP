@@ -36,6 +36,9 @@ Options:
 ##Pandorabot configuration
           $fantasy: Enable pandorabot by default.  False to disable, true to enable.  Note that the 
                     @fantasy-[on, off] commands override this.
+##Windows configuration.  If you are running the bot on Windows, you must set this to true!!!!!
+   $setIsOnWindows: Tells the bot that its running on Windows.  Automatically sets $setUsePCREs to true.  Please read
+                    the guide to running the bot on Windows here: http://scalar.cluenet.org/~fastlizard4/lizardbot.php?page=win
 [RECOMMENDED]
          $setGecos: Set the bot's gecos, or real name.  String.  Default: bot
          $setIdent: Set the bot's username if no ident reply is sent.  String. Default: bot
@@ -68,6 +71,10 @@ $setMySQLDefaultDB: Set the default database in MySQL.  Recommended, but not nee
 
    $setTrustGoogle: If, for some reason, you are extremely paranoid and don't trust the Google,
                     set this to false.  Boolean, default TRUE.
+                    
+      $setUsePCREs: Instead of standard IRC hostmask syntax, use the more-powerful Perl Compatible
+                    Regular Expressions.  Not recommended for novice users.  Boolean, default FALSE.
+                    TRUE to use PCREs.
 ***************************************/
 #################################################
 #                     REQUIRED                  #
@@ -116,6 +123,9 @@ $privgroups[ 'root'      ][ 'eval'        ] = 1;
 
 ##Pandorabot config
 $setFantasy = FALSE;
+
+##If you are on Windows, YOU MUST SET THIS TO TRUE!
+$setIsOnWindows = FALSE;
 #################################################
 #                    RECOMMENDED                #
 #                       BLOCK                   #
@@ -164,34 +174,46 @@ $setEnableExec = FALSE;
 $setEnableEval = FALSE;
 
 $setTrustGoogle = TRUE;
+
+$setUsePCREs = FALSE;
 /****************************************
 SYSTEM DEFINED FUNCTIONS - ALL SETINGS MUST GO ABOVE THIS!
 *****************************************/ 
 if(!$rehash) {
 	function hasPriv($priv) {
-		global $privgroups, $users, $d;
+		global $privgroups, $users, $d, $setIsOnWindows, $setUsePCREs;
 		$parsed = $d[0];
 		foreach( $users as $user => $group ) {
-			if( fnmatch( $user, $parsed/*['n!u@h']*/ ) ) {
-				if( isset( $privgroups[$group][$priv] ) ) {
-					return $privgroups[$group][$priv];
-				} else {
-					return 0;
+			if($setUsePCREs || $setIsOnWindows) {
+				if( preg_match( $user, $parsed/*['n!u@h']*/ ) ) {
+					if( isset( $privgroups[$group][$priv] ) ) {
+						return $privgroups[$group][$priv];
+					} else {
+						return 0;
+					}
+				}
+			} elseif (!$setUsePCREs && !$setIsOnWindows) {
+				if( fnmatch( $user, $parsed/*['n!u@h']*/ ) ) {
+					if( isset( $privgroups[$group][$priv] ) ) {
+						return $privgroups[$group][$priv];
+					} else {
+						return 0;
+					}
 				}
 			}
 		}
 		$d[0] = $parsed;
 	}
-	function showPriv() {
+/*	function showPriv() {
 		global $privgroups, $users, $d;
 		$parsed = $d[0];
 		foreach( $users as $user => $group ) {
-			if( fnmatch( $user, $parsed/*['n!u@h']*/ ) ) {
+			if( fnmatch( $user, $parsed/*['n!u@h'] ) ) {
 				return "$group";
 			} else {
 				return "Error getting priv";
 			}
 		}
-	}
+	} */
 }
 ?>
