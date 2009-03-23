@@ -49,7 +49,7 @@ echo $c_green;
 |_____||_______| |________||_|      |_| |_|   \__\ |____/
 
 PHP-LizardBot: IRC bot developed by FastLizard4 (who else?) and the LizardBot Development Team
-Version 6.0.0.3b (major.minor.build.revision) BETA
+Version 6.0.0.4b (major.minor.build.revision) BETA
 Licensed under the Creative Commons GNU General Public License 2.0 (GPL)
 For licensing details, contact me or read this page:
 http://creativecommons.org/licenses/GPL/2.0/
@@ -85,7 +85,7 @@ PandoraBot extension courtesy of Ttech (PHP-5 OOP)
 <?php
 //Check for updates
 echo "{$c_yellow}Checking for updates...\r\n";
-$version = "6.0.0.3b";
+$version = "6.0.0.4b";
 $upfp = @fopen('http://scalar.cluenet.org/~fastlizard4/latest.php', 'r');
 $data = @fgets($upfp);
 @fclose($upfp);
@@ -1015,7 +1015,7 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
         }
 	if($d[3] == "{$setTrigger}update" && hasPriv('*')) {
 		echo "Checking for updates...\r\n";
-		$version = "6.0.0.3b";
+		$version = "6.0.0.4b";
 		$upfp = @fopen('http://scalar.cluenet.org/~fastlizard4/latest.php', 'r');
 		$data = @fgets($upfp);
 		@fclose($upfp);
@@ -1286,7 +1286,6 @@ STDOUT;
 				}
 				$i++;
 			}
-			if($i > 50) { $data = "ERROR: Connection Timed Out!"; }
 			$editcount['live'] = explode("<b>Live edits: ", $soxtoolOut);
 			$editcount['live']['parsed'] = explode("</b><br />", $editcount['live'][1]);
 			$editcount['userrights'] = explode("User groups: ", $soxtoolOut);
