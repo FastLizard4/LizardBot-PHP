@@ -49,7 +49,7 @@ echo $c_green;
 |_____||_______| |________||_|      |_| |_|   \__\ |____/
 
 PHP-LizardBot: IRC bot developed by FastLizard4 (who else?) and the LizardBot Development Team
-Version 6.0.0.0b (major.minor.build.revision) BETA
+Version 6.0.0.1b (major.minor.build.revision) BETA
 Licensed under the Creative Commons GNU General Public License 2.0 (GPL)
 For licensing details, contact me or read this page:
 http://creativecommons.org/licenses/GPL/2.0/
@@ -85,7 +85,7 @@ PandoraBot extension courtesy of Ttech (PHP-5 OOP)
 <?php
 //Check for updates
 echo "{$c_yellow}Checking for updates...\r\n";
-$version = "6.0.0.0b";
+$version = "6.0.0.1b";
 $upfp = @fopen('http://scalar.cluenet.org/~fastlizard4/latest.php', 'r');
 $data = @fgets($upfp);
 @fclose($upfp);
@@ -1015,7 +1015,7 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
         }
 	if($d[3] == "{$setTrigger}update" && hasPriv('*')) {
 		echo "Checking for updates...\r\n";
-		$version = "6.0.0.0b";
+		$version = "6.0.0.1b";
 		$upfp = @fopen('http://scalar.cluenet.org/~fastlizard4/latest.php', 'r');
 		$data = @fgets($upfp);
 		@fclose($upfp);
@@ -1250,6 +1250,70 @@ STDOUT;
 		unset($tt);
 		unset($tnick);
 		unset($stopExecution);
+	}
+	if($d[3] == "{$setTrigger}editcount" && hasPriv('*')) {
+		$error = FALSE;
+		/************************
+		 Editcount function
+		 *Determines a user's editcount on various Wikimedia wikis
+		 *May be upgraded in the future to use non-wikimedia wikis
+		 *Variables used:
+		 **
+		 **********************/
+		$editcount['user'] = $d[4];
+		$editcount['wiki'] = $d[6];
+		$editcount['lang'] = $d[5];
+		if(!$editcount['wiki']) { $editcount['wiki'] = "wikipedia"; }
+		if(!$editcount['lang']) { $editcount['lang'] = "en"; }
+		if(!$editcount['user']) {
+			$error = TRUE;
+			$data = "Error: No username was specified.  Please specify one.";
+		} else {
+			$editcount['user'] = urlencode($editcount['user']);
+			$editcount['lang'] = urlencode($editcount['lang']);
+			$editcount['wiki'] = urlencode($editcount['wiki']);
+		}
+		if(!$error) {
+			$soxtoolURL = "http://toolserver.org/~soxred93/count/index.php?name={$editcount['user']}&lang={$editcount['lang']}&wiki={$editcount['wiki']}";
+			$data = NULL;
+			$soxtool = @fopen($soxtoolURL, 'r') OR $data = "Error connecting to SoxRed's editcounter!  Oh noes!";
+			while(!feof($soxtool)) {
+				if(!$soxtoolOut) {
+					$soxtoolOut = fgets($soxtool);
+				} else {
+					$soxtoolOut .= fgets($soxtool);
+				}
+			}
+			$editcount['live'] = explode("<b>Live edits: ", $soxtoolOut);
+			$editcount['live']['parsed'] = explode("</b><br />", $editcount['live'][1]);
+			$editcount['userrights'] = explode("User groups: ", $soxtoolOut);
+			$editcount['userrights']['parsed'] = explode("<br />", $editcount['userrights'][1]);
+			$editcount['first edit'] = explode("First edit: ", $soxtoolOut);
+			$editcount['first edit']['parsed'] = explode("<br />", $editcount['first edit'][1]);
+			$editcount['deleted'] = explode("Deleted edits: ", $soxtoolOut);
+			$editcount['deleted']['parsed'] = explode("<br />", $editcount['deleted'][1]);
+			$editcount['total'] = explode("Total edits (including deleted): ", $soxtoolOut);
+			$editcount['total']['parsed'] = explode("<br />", $editcount['total'][1]);
+			if($setNoBolds) {
+				$bold = NULL;
+			} else {
+				$bold = "\002";
+			}
+			$data .= "\0032Contribs: http://{$editcount['lang']}.{$editcount['wiki']}.org/wiki/Special:Contributions/{$editcount['user']}\003 - ";
+			$data .= "\0037Userrights: {$editcount['userrights']['parsed'][0]}\003 - \0036First edit: {$editcount['first edit']['parsed'][0]}\003 - {$bold}\00312Total edits: {$editcount['total']['parsed'][0]} \003(\0034Deleted: {$editcount['deleted']['parsed'][0]}\003 - \0033Live: {$editcount['live']['parsed'][0]}\003){$bold} - \00310{$soxtoolURL}\003";
+		}
+		$target = explode("!", $d[0]);
+		$e = $target[0] . ": ";
+		if($d[2] == $nick) {
+			$target = explode("!", $d[0]);
+			$c = $target[0];
+			$e = NULL;
+		} else {
+			$c = $d[2];
+		}
+		fwrite($ircc, "PRIVMSG $c :" . $e . $data . "\r\n");
+		echo "-!- PRIVMSG $c :" . $e . $data . "\r\n";
+		unset($error, $editcount, $data, $soxtoolURL, $soxtool, $soxtoolOut, $c, $e, $target);
 	}
 }
 if($d[3] == "{$setTrigger}mute" && hasPriv('mute')) {
