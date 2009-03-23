@@ -49,7 +49,7 @@ echo $c_green;
 |_____||_______| |________||_|      |_| |_|   \__\ |____/
 
 PHP-LizardBot: IRC bot developed by FastLizard4 (who else?) and the LizardBot Development Team
-Version 6.0.0.1b (major.minor.build.revision) BETA
+Version 6.0.0.2b (major.minor.build.revision) BETA
 Licensed under the Creative Commons GNU General Public License 2.0 (GPL)
 For licensing details, contact me or read this page:
 http://creativecommons.org/licenses/GPL/2.0/
@@ -85,7 +85,7 @@ PandoraBot extension courtesy of Ttech (PHP-5 OOP)
 <?php
 //Check for updates
 echo "{$c_yellow}Checking for updates...\r\n";
-$version = "6.0.0.1b";
+$version = "6.0.0.2b";
 $upfp = @fopen('http://scalar.cluenet.org/~fastlizard4/latest.php', 'r');
 $data = @fgets($upfp);
 @fclose($upfp);
@@ -1015,7 +1015,7 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
         }
 	if($d[3] == "{$setTrigger}update" && hasPriv('*')) {
 		echo "Checking for updates...\r\n";
-		$version = "6.0.0.1b";
+		$version = "6.0.0.2b";
 		$upfp = @fopen('http://scalar.cluenet.org/~fastlizard4/latest.php', 'r');
 		$data = @fgets($upfp);
 		@fclose($upfp);
@@ -1277,12 +1277,14 @@ STDOUT;
 			$soxtoolURL = "http://toolserver.org/~soxred93/count/index.php?name={$editcount['user']}&lang={$editcount['lang']}&wiki={$editcount['wiki']}";
 			$data = NULL;
 			$soxtool = @fopen($soxtoolURL, 'r') OR $data = "Error connecting to SoxRed's editcounter!  Oh noes!";
-			while(!feof($soxtool)) {
+			$i = 0;
+			while(!feof($soxtool) && $i <= 50) {
 				if(!$soxtoolOut) {
 					$soxtoolOut = fgets($soxtool);
 				} else {
 					$soxtoolOut .= fgets($soxtool);
 				}
+				$i++;
 			}
 			$editcount['live'] = explode("<b>Live edits: ", $soxtoolOut);
 			$editcount['live']['parsed'] = explode("</b><br />", $editcount['live'][1]);
