@@ -75,6 +75,10 @@ $setMySQLDefaultDB: Set the default database in MySQL.  Recommended, but not nee
       $setUsePCREs: Instead of standard IRC hostmask syntax, use the more-powerful Perl Compatible
                     Regular Expressions.  Not recommended for novice users.  Boolean, default FALSE.
                     TRUE to use PCREs.
+                    
+   $setInsultUsers: Throw insults like the Bard!  When set to true, allows use of the insult command.
+                    See the documentation at http://lizardwiki.gewt.net/wiki/LizardBot/Docs for details.
+                    Boolean, default TRUE.
 ***************************************/
 #################################################
 #                     REQUIRED                  #
@@ -97,6 +101,7 @@ $privgroups[ 'ignore'    ]                  = 0;                      //'ignore'
 $privgroups[ '*'         ][ '*'           ] = 1;                      //All basic privs
 $privgroups[ '*'         ][ 'nyse'        ] = 1;
 $privgroups[ '*'         ][ 'fantasy'     ] = 1;
+$privgroups[ '*'         ][ 'insult'      ] = 1;
 
 $privgroups[ 's-trusted' ]                  = $privgroups['*'];       // 's-trusted' inherits '*'
 $privgroups[ 's-trusted' ][ 'fap'         ] = 1;
@@ -176,6 +181,8 @@ $setEnableEval = FALSE;
 $setTrustGoogle = TRUE;
 
 $setUsePCREs = FALSE;
+
+$setInsultUsers = TRUE;
 /****************************************
 SYSTEM DEFINED FUNCTIONS - ALL SETINGS MUST GO ABOVE THIS!
 *****************************************/ 

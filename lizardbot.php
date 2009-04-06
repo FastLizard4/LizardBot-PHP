@@ -49,7 +49,7 @@ echo $c_green;
 |_____||_______| |________||_|      |_| |_|   \__\ |____/
 
 PHP-LizardBot: IRC bot developed by FastLizard4 (who else?) and the LizardBot Development Team
-Version 6.0.0.4b (major.minor.build.revision) BETA
+Version 6.0.0.5b (major.minor.build.revision) BETA
 Licensed under the Creative Commons GNU General Public License 2.0 (GPL)
 For licensing details, contact me or read this page:
 http://creativecommons.org/licenses/GPL/2.0/
@@ -85,7 +85,7 @@ PandoraBot extension courtesy of Ttech (PHP-5 OOP)
 <?php
 //Check for updates
 echo "{$c_yellow}Checking for updates...\r\n";
-$version = "6.0.0.4b";
+$version = "6.0.0.5b";
 $upfp = @fopen('http://scalar.cluenet.org/~fastlizard4/latest.php', 'r');
 $data = @fgets($upfp);
 @fclose($upfp);
@@ -463,9 +463,10 @@ if($i == 1) {
 }
 if($irc['identify']) {
 	echo "Waiting 2 seconds before sending identification information to make sure we're registered...\r\n";
+	sleep(2);
 	fwrite($fp[$n], "PRIVMSG NickServ :IDENTIFY " . $irc['ns-username'] . $irc['ns-password'] . "\r\n");
 	echo <<<IRCO
-*** ID INFO SENT
+*** ID INFO SENT\r\n
 IRCO;
 	$irc['ns-username'] = NULL;
 }
@@ -1015,7 +1016,7 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
         }
 	if($d[3] == "{$setTrigger}update" && hasPriv('*')) {
 		echo "Checking for updates...\r\n";
-		$version = "6.0.0.4b";
+		$version = "6.0.0.5b";
 		$upfp = @fopen('http://scalar.cluenet.org/~fastlizard4/latest.php', 'r');
 		$data = @fgets($upfp);
 		@fclose($upfp);
@@ -1197,6 +1198,7 @@ STDOUT;
 		$d[3] = NULL;
 		$toGoogle = implode(" ", $d);
 		$googleURL = 'http://www.google.com/search?q=' . urlencode($toGoogle);
+		$googleOut = NULL;
 		$google = @fopen($googleURL, 'r') OR $data = "Error connecting to Google!  Oh noes!";
 		while(!feof($google)) {
 			if(!$googleOut) {
@@ -1276,6 +1278,7 @@ STDOUT;
 		if(!$error) {
 			$soxtoolURL = "http://toolserver.org/~soxred93/count/index.php?name={$editcount['user']}&lang={$editcount['lang']}&wiki={$editcount['wiki']}";
 			$data = NULL;
+			$soxtoolOut = NULL;
 			$soxtool = @fopen($soxtoolURL, 'r') OR $data = "Error connecting to SoxRed's editcounter!  Oh noes!";
 			$i = 0;
 			while(!feof($soxtool) && $i <= 50) {
@@ -1316,6 +1319,43 @@ STDOUT;
 		fwrite($ircc, "PRIVMSG $c :" . $e . $data . "\r\n");
 		echo "-!- PRIVMSG $c :" . $e . $data . "\r\n";
 		unset($error, $editcount, $data, $soxtoolURL, $soxtool, $soxtoolOut, $c, $e, $target);
+	}
+	if($d[3] == "{$setTrigger}insult" && hasPriv('insult') && $setInsultUsers) {
+		$error = NULL;
+		$insult = @fopen("http://www.pangloss.com/seidel/Shaker/index.html", 'r') OR $error = "Unable to connect to internet.  Is it broken by Conficker?";
+		$insultOut = NULL;
+		if($error) {
+			$data = $error;
+		} else {
+			while(!feof($insult)) {
+				if(!$insultOut) {
+					$insultOut = fgets($insult);
+				} else {
+					$insultOut .= fgets($insult);
+				}
+			}
+			$parsed = array();
+			$parsed[0] = explode("<font size=\"+2\">", $insultOut);
+			$parsed[1] = explode("</font>", $parsed[0][1]);
+			$result = strip_tags($parsed[1][0]);
+			$data = trim($result);
+		}
+		$target = explode("!", $d[0]);
+		if($d[4]) {
+			$e = $d[4] . ": ";
+		} else {
+			$e = $target[0] . ": ";
+		}
+		if($d[2] == $nick) {
+			$target = explode("!", $d[0]);
+			$c = $target[0];
+			$e = NULL;
+		} else {
+			$c = $d[2];
+		}
+		fwrite($ircc, "PRIVMSG $c :" . $e . $data . "\r\n");
+		echo "-!- PRIVMSG $c :" . $e . $data . "\r\n";
+		fclose($insult);
 	}
 }
 if($d[3] == "{$setTrigger}mute" && hasPriv('mute')) {
