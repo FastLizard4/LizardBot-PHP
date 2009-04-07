@@ -49,7 +49,7 @@ echo $c_green;
 |_____||_______| |________||_|      |_| |_|   \__\ |____/
 
 PHP-LizardBot: IRC bot developed by FastLizard4 (who else?) and the LizardBot Development Team
-Version 6.0.0.5b (major.minor.build.revision) BETA
+Version 6.0.0.6b (major.minor.build.revision) BETA
 Licensed under the Creative Commons GNU General Public License 2.0 (GPL)
 For licensing details, contact me or read this page:
 http://creativecommons.org/licenses/GPL/2.0/
@@ -85,7 +85,7 @@ PandoraBot extension courtesy of Ttech (PHP-5 OOP)
 <?php
 //Check for updates
 echo "{$c_yellow}Checking for updates...\r\n";
-$version = "6.0.0.5b";
+$version = "6.0.0.6b";
 $upfp = @fopen('http://scalar.cluenet.org/~fastlizard4/latest.php', 'r');
 $data = @fgets($upfp);
 @fclose($upfp);
@@ -1016,7 +1016,7 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
         }
 	if($d[3] == "{$setTrigger}update" && hasPriv('*')) {
 		echo "Checking for updates...\r\n";
-		$version = "6.0.0.5b";
+		$version = "6.0.0.6b";
 		$upfp = @fopen('http://scalar.cluenet.org/~fastlizard4/latest.php', 'r');
 		$data = @fgets($upfp);
 		@fclose($upfp);
@@ -1341,10 +1341,14 @@ STDOUT;
 			$data = trim($result);
 		}
 		$target = explode("!", $d[0]);
-		if($d[4]) {
+		if($d[4] && $d[4] != $nick) {
 			$e = $d[4] . ": ";
 		} else {
-			$e = $target[0] . ": ";
+			if($d[4] == $nick) {
+				$e = $target[0] . ": I refuse to insult myself, so I will now insult you.  ";
+			} else {
+				$e = $target[0] . ": ";
+			}
 		}
 		if($d[2] == $nick) {
 			$target = explode("!", $d[0]);
