@@ -1,5 +1,10 @@
 #!/usr/bin/php
 <?php
+$cmdcount = 0;
+$pingcount = 0;
+$ctcpcount = 0;
+$aicount = 0;
+$insultcount = 0;
 echo "Determining what configuration file we should use...\r\n";
 $dir = $_SERVER['argv'][1];
 $cfg = FALSE;
@@ -49,7 +54,7 @@ echo $c_green;
 |_____||_______| |________||_|      |_| |_|   \__\ |____/
 
 PHP-LizardBot: IRC bot developed by FastLizard4 (who else?) and the LizardBot Development Team
-Version 6.0.0.6b (major.minor.build.revision) BETA
+Version 6.0.0.7b (major.minor.build.revision) BETA
 Licensed under the Creative Commons GNU General Public License 2.0 (GPL)
 For licensing details, contact me or read this page:
 http://creativecommons.org/licenses/GPL/2.0/
@@ -85,8 +90,8 @@ PandoraBot extension courtesy of Ttech (PHP-5 OOP)
 <?php
 //Check for updates
 echo "{$c_yellow}Checking for updates...\r\n";
-$version = "6.0.0.6b";
-$upfp = @fopen('http://scalar.cluenet.org/~fastlizard4/latest.php', 'r');
+$version = "6.0.0.7b";
+$upfp = @fopen('http://lizardwiki.gewt.net/w/index.php?title=LizardBot/Latest&action=raw', 'r');
 $data = @fgets($upfp);
 @fclose($upfp);
 if(!$data) {
@@ -268,6 +273,16 @@ if(!$nickname) {
 }
 if(!$setTrigger) {
 	$setTrigger = "@";
+}
+if(!$timezone) {
+	echo <<<EOD
+{$c_red}WARNING!  You did not specify a time zone!  This means you are using
+the timezone being used by your computer or in your PHP configuration file.  It
+is strongly recommended that you set the timezone using the \$timezone variable in
+your LizardBot configuration file!  You have been warned!{$c_n}\r\n
+EOD;
+} else {
+	date_default_timezone_set($timezone);
 }
 echo "OK!";
 echo <<<CONSOLEOUTPUT
@@ -482,6 +497,7 @@ echo <<<CONSOLEOUTPUT
 {$c_n}{$c_green}Input of "{$irc['channels']}" received!{$c_n}\n
 Joining...\n
 CONSOLEOUTPUT;
+$uptime['start'] = time();
 $irc['channels'] = explode(",", $irc['channels']);
 foreach($irc['channels'] AS $channel) {
 	fwrite($fp[$n], "JOIN $channel\r\n");
@@ -512,19 +528,17 @@ CONSOLEOUTPUT;
 	$data3 = str_replace("$$", ":", $data2);
 	$d = explode(' ', $data3);
 	$c = $d[2];
-	if(!stristr($d[0], "@wikimedia/CableModem") && !stristr($d[0], "@68.63.51.153") && !stristr($d[0], "@wikipedia/Chetblong") && !stristr($d[0], "@wikimedia/Luna-Santin") && !$muted) {
-/* IGNORE LIST: wikipedia/Chetblong wikimedia/Luna-Santin */
+	if(!$muted) {
 		if($d[3] == "{$setTrigger}test"&& hasPriv('*')) {
+			$cmdcount++;
 			fwrite($ircc, "PRIVMSG $c :OLOL!\r\n");
 			echo <<<IRCO
 -!- PRIVMSG #lobby :OLOL!\n
 IRCO;
 		}
 		if($d[3] == "{$setTrigger}die" && hasPriv('die')) {
-/*    if((($d[0] == "FastLizard4!FastLizard@netadmin.TyroNet.org" || $d[1] == 
-"FastLizard4!FastLizard@netadmin.TyroNet.org") || ($d[0] == "FastLizard4!n=FastLiza@wikipedia/FastLizard4" || $d[1] 
-== "FastLizard4!n=FastLiza@wikipedia/FastLizard4"))) {*/
-/* if(stristr($d[0], "wikipedia/FastLizard4") || stristr($d[0], "FastLizard4!FastLiza")) */ if(true) {
+			$cmdcount++; // 9_9
+			if(true) {
 				fwrite($ircc, "QUIT :Ordered to death by {$d[0]}!\r\n");
 				echo <<<IRCO
 {$c_red}-!- QUIT :Ordered to death!\n
@@ -541,6 +555,7 @@ IRCO;
 		}
 	if(hasPriv('say')) {
 		if($d[3] == "{$setTrigger}say") {
+			$cmdcount++;
 			if($d[2] != $nick) {
 				$ndata = explode(":{$setTrigger}say ", $data);
 				$rdata = $ndata[1];
@@ -564,6 +579,7 @@ IRCO;
 	}
 	if(hasPriv('do')) {
 		if($d[3] == "{$setTrigger}do") {
+			$cmdcount++;
 			if($d[2] != $nick) {
 				$ndata = explode(":{$setTrigger}do ", $data);
 				$ddata = $ndata[1];
@@ -589,6 +605,7 @@ IRCO;
 		}
 	}
 	if($d[3] == "{$setTrigger}join" && hasPriv('join')) {
+		$cmdcount++;
 		fwrite($ircc, "JOIN {$d[4]}\r\n");
 		fwrite($ircc, "PRIVMSG {$d[4]} :{$d[0]} has ordered me to join the channel.\r\n");
 		echo <<<IRCO
@@ -596,6 +613,7 @@ IRCO;
 IRCO;
 	}
 	if($d[3] == "{$setTrigger}part" && hasPriv('part')) {
+		$cmdcount++;
 		fwrite($ircc, "PART {$d[4]} :Ordered to death by {$d[0]}!\r\n");
 		echo <<<IRCO
 -!- PART {$d[4]}\n
@@ -603,6 +621,7 @@ IRCO;
 	}
 	if(hasPriv('notice')) {
 		if($d[3] == "{$setTrigger}notice") {
+			$cmdcount++;
 			if($d[2] != $nick) {
 				$ndata = explode(":{$setTrigger}notice ", $data);
 				$rdata = $ndata[1];
@@ -625,10 +644,8 @@ IRCO;
 		}
 	}
 	if($d[3] == "{$setTrigger}raw" && hasPriv('raw')) {
-/*if((($d[0] == "FastLizard4!FastLizard@netadmin.TyroNet.org" || $d[1] ==
-"FastLizard4!FastLizard@netadmin.TyroNet.org") || ($d[0] == "FastLizard4!n=FastLiza@wikipedia/FastLizard4" || $d[1]
-== "FastLizard4!n=FastLiza@wikipedia/FastLizard4"))) {
-if(stristr($d[0], "wikipedia/FastLizard4") || stristr($d[0], "FastLizard4!FastLiza")) */ if(true) {
+		$cmdcount++;
+		if(true) {
 			$kdata = explode("{$setTrigger}raw ", $data);
 			$rdata = $kdata[1];
 			fwrite($ircc, "$rdata\r\n");
@@ -643,18 +660,14 @@ IRCO;
 		}
 	}
 	if($d[0] == 'PING') {
+		$pingcount++;
 		fwrite($ircc, "PONG {$d[1]}\r\n");
 		echo <<<IRCO
 PONG {$d[1]}\n
 IRCO;
 	}
-	if($d[3] == "{$setTrigger}oper" && $irc['address'] == "yamakiri.tyronet.org" && hasPriv('oper-tyronet')) {
-		fwrite($ircc, "OPER FastLizard4 {$d[4]}\r\n");
-		echo <<<IRCO
--!- Sent oper command\n
-IRCO;
-	}
 	if($d[3] == "{$setTrigger}fap" && hasPriv('fap')) {
+		$cmdcount++;
 		if(!$d[4]) {
 			$who = explode("!", $d[0]);
 			$who2 = $who[0];
@@ -668,6 +681,7 @@ IRCO;
 	}
 	if(hasPriv('op')) {
 		if($d[3] == "{$setTrigger}kick") {
+			$cmdcount++;
 //$data1 = explode("{$setTrigger}kick ", $data);
 			if($d[2] != $nick) {
 				$kdata = explode(":{$setTrigger}kick ", $data);
@@ -693,24 +707,21 @@ IRCO;
 		}
 	}
 	if($d[3] == "{$setTrigger}op" && hasPriv('op')) {
+		$cmdcount++;
 		fwrite($ircc, "PRIVMSG ChanServ :OP $c\r\n");
 		echo <<<IRCO
 PRIVMSG ChanServ :OP $c\n
 IRCO;
 	}
 	if($d[3] == "{$setTrigger}deop" && hasPriv('op')) {
+		$cmdcount++;
 		fwrite($ircc, "MODE $c -o {$nick}\r\n");
 		echo <<<IRCO
 MODE $c -o LizardBot-1\n
 IRCO;
 	}
-	if($d[3] == "{$setTrigger}deoper" && hasPriv('oper-tyronet')) {
-		fwrite($ircc, "MODE LizardBot-1 -os\r\n");
-		echo <<<IRCO
-MODE LizardBot-1 -os\n
-IRCO;
-	}
 	if($d[3] == chr(001) . "VERSION" . chr(001)) {
+		$ctcpcount++;
 		$target = explode("!", $d[0]);
 		$target = $target[0];
 		$data = "NOTICE $target :";
@@ -724,11 +735,12 @@ IRCO;
 IRCO;
 	}
 	if($d[3] == chr(001) . "TIME" . chr(001)) {
+		$ctcpcount++;
 		$target = explode("!", $d[0]);
 		$target = $target[0];
 		$data = "NOTICE $target :";
 		$data .= chr(001);
-		$data .= "TIME " . $setCTCPTime;
+		$data .= "TIME " . date('r');
 		$data .= chr(001);
 		$data .= "\r\n";
 		fwrite($ircc, $data);
@@ -737,6 +749,7 @@ IRCO;
 IRCO;
 	}
 	if($d[3] == chr(001) . "USERINFO" . chr(001)) {
+		$ctcpcount++;
 		$target = explode("!", $d[0]);
 		$target = $target[0];
 		$data = "NOTICE $target :";
@@ -750,6 +763,7 @@ IRCO;
 IRCO;
 	}
 	if($d[3] == chr(001) . "CLIENTINFO" . chr(001)) {
+		$ctcpcount++;
 		$target = explode("!", $d[0]);
 		$target = $target[0];
 		$data = "NOTICE $target :";
@@ -763,6 +777,7 @@ IRCO;
 IRCO;
 	}
 	if($d[3] == "{$setTrigger}rehash" && hasPriv('rehash')) {
+		$cmdcount++;
 		if($d[2] == $nick) {
 			$kdata = explode($d[0], "!");
 			$target = $kdata[0];
@@ -778,34 +793,14 @@ IRCO;
 		echo "PRIVMSG $target :Rehashed config file.\r\n";
 	}
 	if($d[3] == "{$setTrigger}nick" && hasPriv('nick')) {
+		$cmdcount++;
 		$nick = $d[4];
 		fwrite($ircc, "NICK $nick\r\n");
 		echo "-!- NICK $nick\r\n";
 	}
-/*	if($d[3] == "{$setTrigger}eval" && hasPriv('eval')) {
-		echo "-!- Received eval COM.\r\n";
-		$parsed = $d[0];
-		$d[0] = NULL;
-		$d[1] = NULL;
-		$parsed2 = $d[2];
-		$d[2] = NULL;
-		$d[3] = NULL;
-		$eval = implode($d, " ");
-		eval($eval);
-                $data = $r;
-                $target = explode("!", $parsed);
-                $e = $target[0] . ": ";
-                if($d[2] == $nick) {
-                        $target = explode("!", $parsed);
-                        $c = $target[0];
-                        $e = NULL;
-                } else {
-                        $c = $parsed2;
-                }
-                fwrite($ircc, "PRIVMSG $c :" . $e . $data . "\r\n");
-                echo "-!- PRIVMSG $c :" . $e . $data . "\r\n";
-	}*/
+
 	if(($d[3] == "{$setTrigger}info" || $d[3] == "{$setTrigger}help") && hasPriv('*')) {
+		$cmdcount++;
 		$target = explode("!", $d[0]);
 		$target2 = $target[0];
 		if(!stristr($d[2], "#")) {
@@ -826,6 +821,7 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
 ";
 	}
 	if($d[3] == "{$setTrigger}nyse" && hasPriv('nyse')) {
+		$cmdcount++;
 		$symbol = $d[4];
 		$url = sprintf('http://quote.yahoo.com/d/quotes.csv?s=%s&f=nl1c6k2t1vp', $symbol);
 		echo "-!- Getting quote for $symbol\r\n";
@@ -862,6 +858,7 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
 		echo "PRIVMSG $c :" . $e . $data . "\r\n";
 	}
 	if($d[3] == "{$setTrigger}fantasy" && hasPriv('mute')) {
+		$cmdcount++;
 		if(!$setFantasy) {
 			$data = "Fantasy is off.";
 		} else {
@@ -880,6 +877,7 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
 		echo "-!- PRIVMSG $c :" . $e . $data . "\r\n";
 	}
 	if($d[3] == "{$setTrigger}fantasy-on" && hasPriv('mute')) {
+		$cmdcount++;
 		$setFantasy = TRUE;
 		$ai = new pandorabot("838c59c76e36816b");
 		if(!$setAIDefaultRE) { $setAIDefaultRE = "Probably"; }
@@ -898,6 +896,7 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
                 echo "-!- PRIVMSG $c :" . $e . $data . "\r\n";
 	}
         if($d[3] == "{$setTrigger}fantasy-off" && hasPriv('mute')) {
+        	$cmdcount++;
                 $setFantasy = FALSE;
 		unset($ai);
                 $data = "Fantasy turned off!";
@@ -938,6 +937,7 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
 			$msg = $parsedata; // This is the message you get from IRC 
 			$ai->set_timeout(180); // 60 should be fine
 			$rofl = $ai->say($msg); // This is what you want to get back to the user. 
+			$aicount++;
 			if(!$rofl || preg_match("/^\s*$/", $rofl)) { $rofl = $ai->default_response; }
 	                $target = explode("!", $d[0]);
         	        $e = $target[0] . ": ";
@@ -954,6 +954,7 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
 		}
 	}
 	if($d[3] == "{$setTrigger}exec" && hasPriv('exec') && $setEnableExec) {
+		$cmdcount++;
 		$tgc = $d[2];
 		$tgf = $d[0];
 		$d[0] = NULL;
@@ -983,6 +984,7 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
 
 	}
 	if($d[3] == "{$setTrigger}eval" && hasPriv('eval') && $setEnableEval) {
+		$cmdcount++;
                 $tgc = $d[2];
                 $tgf = $d[0];
                 $d[0] = NULL;
@@ -1015,9 +1017,10 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
                 echo "-!- PRIVMSG $c :" . $e . $output . "\r\n";
         }
 	if($d[3] == "{$setTrigger}update" && hasPriv('*')) {
+		$cmdcount++;
 		echo "Checking for updates...\r\n";
-		$version = "6.0.0.6b";
-		$upfp = @fopen('http://scalar.cluenet.org/~fastlizard4/latest.php', 'r');
+		$version = "6.0.0.7b";
+		$upfp = @fopen('http://lizardwiki.gewt.net/w/index.php?title=LizardBot/Latest&action=raw', 'r');
 		$data = @fgets($upfp);
 		@fclose($upfp);
                 $target = explode("!", $d[0]);
@@ -1041,6 +1044,7 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
                 echo "-!- PRIVMSG $c :" . $e . $output . "\r\n";
 	}
 	if($d[3] == "{$setTrigger}wot" && hasPriv('*')) {
+		$cmdcount++;
                 $site = $d[4];
                 $url = sprintf('http://api.mywot.com/0.4/public_link_json?hosts=%s/&callback=jsonp1225957266492&_=1225957271558', $site);
                 echo "-!- Getting WoT ratings for {$site}\r\n";
@@ -1179,6 +1183,7 @@ STDOUT;
 		unset($color);
 	}
 	if($d[3] == "{$setTrigger}gcalc" && hasPriv('*') && $setTrustGoogle) {
+		$cmdcount++;
 		/*
 		* VARIABLES
 		*   $toGoogle: Data to be sent to Google
@@ -1254,6 +1259,7 @@ STDOUT;
 		unset($stopExecution);
 	}
 	if($d[3] == "{$setTrigger}editcount" && hasPriv('*')) {
+		$cmdcount++;
 		$error = FALSE;
 		/************************
 		 Editcount function
@@ -1321,6 +1327,8 @@ STDOUT;
 		unset($error, $editcount, $data, $soxtoolURL, $soxtool, $soxtoolOut, $c, $e, $target);
 	}
 	if($d[3] == "{$setTrigger}insult" && hasPriv('insult') && $setInsultUsers) {
+		$insultcount++;
+		$cmdcount++;
 		$error = NULL;
 		$insult = @fopen("http://www.pangloss.com/seidel/Shaker/index.html", 'r') OR $error = "Unable to connect to internet.  Is it broken by Conficker?";
 		$insultOut = NULL;
@@ -1361,8 +1369,30 @@ STDOUT;
 		echo "-!- PRIVMSG $c :" . $e . $data . "\r\n";
 		fclose($insult);
 	}
+	if($d[3] == "{$setTrigger}status" && hasPriv('*')) {
+		$cmdcount++;
+		$totalcount = $cmdcount + $pingcount + $ctcpcount + $aicount;
+		$uptime['days'] = (time() - $uptime['start'])/86400;
+		$uptime['days'] = floor($uptime['days']);
+		$uptime['current'] = gmdate('H:i:s', time() - $uptime['start']);
+		$uptime['current'] = $uptime['days'] . ' days, ' . $uptime['current'];
+		$php_os = PHP_OS;
+		$data = "I am bot {$nick}. Software: PHP-LizardBot v{$version} (http://lizardwiki.gewt.net/wiki/LizardBot) on OS {$php_os}; Uptime: {$uptime['current']}; I have been used a total of {$totalcount} times (Commands: {$cmdcount} [Of which, {$insultcount} were insult commands], Server pings: {$pingcount}, Recognized CTCPs: {$ctcpcount}, AI calls: {$aicount}).";
+		$target = explode("!", $d[0]);
+		$e = $target[0] . ": ";
+		if($d[2] == $nick) {
+			$target = explode("!", $d[0]);
+			$c = $target[0];
+			$e = NULL;
+		} else {
+			$c = $d[2];
+		}
+		fwrite($ircc, "PRIVMSG $c :" . $e . $data . "\r\n");
+		echo "-!- PRIVMSG $c :" . $e . $data . "\r\n";
+	}
 }
 if($d[3] == "{$setTrigger}mute" && hasPriv('mute')) {
+	$cmdcount++;
 	$target = explode("!", $d[0]);
 	$target2 = $target[0];
 	if(!stristr($d[2], "#")) {
@@ -1373,6 +1403,7 @@ if($d[3] == "{$setTrigger}mute" && hasPriv('mute')) {
 	fwrite($ircc, "PRIVMSG $c :$target2: Bot now muted.\r\n");
 }
 if($d[3] == "{$setTrigger}unmute" && hasPriv('mute')) {
+	$cmdcount++;
 	$target = explode("!", $d[0]);
 	$target2 = $target[0];
 	if(!stristr($d[2], "#")) {
