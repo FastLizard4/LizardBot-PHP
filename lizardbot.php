@@ -783,6 +783,9 @@ IRCO;
 -!- SENT CTCP VERSION REPLY TO $target\n
 IRCO;
 	}
+
+
+	
 	if($d[3] == chr(001) . "TIME" . chr(001)) {
 		$ctcpcount++;
 		$target = explode("!", $d[0]);
@@ -823,6 +826,22 @@ IRCO;
 		fwrite($ircc, $data);
 		echo <<<IRCO
 -!- SENT CTCP CLIENTINFO REPLY TO $target\n
+IRCO;
+	}
+
+
+	 if($d[3] == chr(001) . "FINGER" . chr(001)) {
+		 $ctcpcount++;
+		 $target = explode("!",$d[0]);
+		 $target = $target[0];
+		 $data = "NOTICE $target :";
+		 $data .= chr(001);
+		 $data .= "VERSION ". $setCTTCPVersion;
+		 $data .= chr(001);
+		 $data .= "\r\n";
+		 fwrite($ircc,$data);
+		 echo <<<IRCO
+-!- SENT CTCP FINGER REPLY TO $target\n
 IRCO;
 	}
 	if($d[3] == "{$setTrigger}rehash" && hasPriv('rehash')) {
