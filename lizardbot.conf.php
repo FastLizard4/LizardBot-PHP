@@ -2,6 +2,8 @@
 /***************************************
 LizardBot configuration file
 ****************************************
+*INSTRUCTIONS AREA FOR THE CONFIGURATION FILE.  READ THIS TOP SECTION COMPLETELY BEFORE
+*CONFIGURING LIZARDBOT!  IF YOU WANT TO SEE THE SETTINGS, SCROLL DOWN BELOW THIS SECTION
 Options:
 [REQUIRED]
 ##Timezone configuration
@@ -83,6 +85,41 @@ $setMySQLDefaultDB: Set the default database in MySQL.  Recommended, but not nee
    $setInsultUsers: Throw insults like the Bard!  When set to true, allows use of the insult command.
                     See the documentation at http://lizardwiki.gewt.net/wiki/LizardBot/Docs for details.
                     Boolean, default TRUE.
+
+[AUTOCONNECT BLOCK]
+This optional block, when configured, allows the bot to immeidately automatically connect to a network
+when the configuration file is loaded.  Note that it is unoveridable - the bot will not prompt at all.
+If the directives are present, the bot will connect if it has all the information it needs, otherwise,
+the bot will automatically quit.
+
+ $autoconnect['enabled']: Boolean.  Whether or not to process autoconnect block.  True to enable autoconnect,
+                          false to disable autoconnect.  All settings below are only needed if this is set to true
+ $autoconnect['network']: String.  What network the bot should connect to.  Format: network OR network:port.
+                          If no port is provided, defaults to 6667.
+    $autoconnect['nick']: String.  What nickname the bot should use.  You can specify . as the value for string
+                          to use the default you stored in the configuration file (see $nickname in the required
+                          block above).
+$autoconnect['identify']: String.  Whether or not to identify.  'yes' or 'y' to identify, 'no' or 'n' to prevent
+                          identification to services.
+ $autoconnect['id-nick']: String.  Nickname to use for identification.  Note that this is only usable on
+                          Atheme, and cannot be used with other daemons, such as Anope to the point that
+                          identification will fail.  It is recommended you use this function with Atheme to guarantee
+                          your bot correctly identifies.  To send the default (if present, see $setNSUsername above),
+                          suppy '.'.  To send NO primary username, supply '#'.
+                          Otherwise, enter the username you would like to use and strike enter.  Please note that this
+                          is not the same as the bot nickname.  This does not need to be set if you disabled autoidentify
+                          (above)
+ $autoconnect['id-pass']: String.  Password to send for identification.
+                          WARNING: PLEASE READ THE BELOW CAREFULLY
+                          ENTERING YOUR PASSWORD HERE WILL STORE IT IN CLEAR TEXT!  IT WILL BE VISIBLE TO THE ENTIRE
+                          WORLD UNLESS YOU TAKE STEPS TO PREVENT OTHERS FROM SEEING IT!  ON UNIX-BASED MACHINES, USE THE
+                          COMMAND chmod 700 lizardbot.conf.php (replace lizardbot.conf.php with the name of your config
+                          file as necessary) TO PREVENT OTHERS FROM READING IT.  IF YOU RUN WINDOWS, MAKE SURE A PASSWORD
+                          IS SET WITH YOUR USER ACCOUNT AND USE WINDOWS EXPLORER TO MARK THE CONFIGURATION FILE AS 'PRIVATE'
+                          IF YOU DO NOT LIKE STORING YOUR PASSWORD IN A FILE, DO NOT SUPPLY IDENTIFICATION INFO OR DO NOT USE
+                          THE AUTOCONNECT FUNCTION!  This does not need to be set if you disabled autoidentify (above).
+$autoconnect['channels']: String.  Comma-delimited list of channels that the bot should join after connecting.  For example:
+                          '#chan1,##chan2,#chan3,#chan4' would be a valid entry, as would '#chan1'.
 ***************************************/
 #################################################
 #                     REQUIRED                  #
@@ -195,6 +232,20 @@ $setTrustGoogle = TRUE;
 $setUsePCREs = FALSE;
 
 $setInsultUsers = TRUE;
+
+#################################################
+#                   AUTOCONNECT                 #
+#                       BLOCK                   #
+#################################################
+if(!$rehash) { //Don't touch this line, else you risk exposing your password
+ $autoconnect['enabled'] = FALSE;
+ $autoconnect['network'] = NULL;
+    $autoconnect['nick'] = NULL;
+$autoconnect['identify'] = NULL;
+ $autoconnect['id-nick'] = NULL;
+ $autoconnect['id-pass'] = NULL;
+$autoconnect['channels'] = NULL;
+} //Don't touch this line, else you risk exposing your password
 /****************************************
 SYSTEM DEFINED FUNCTIONS - ALL SETINGS MUST GO ABOVE THIS!
 *****************************************/ 

@@ -54,7 +54,7 @@ echo $c_green;
 |_____||_______| |________||_|      |_| |_|   \__\ |____/
 
 PHP-LizardBot: IRC bot developed by FastLizard4 (who else?) and the LizardBot Development Team
-Version 6.0.0.7b (major.minor.build.revision) BETA
+Version 6.1.0.0b (major.minor.build.revision) BETA
 Licensed under the Creative Commons GNU General Public License 2.0 (GPL)
 For licensing details, contact me or read this page:
 http://creativecommons.org/licenses/GPL/2.0/
@@ -90,7 +90,7 @@ PandoraBot extension courtesy of Ttech (PHP-5 OOP)
 <?php
 //Check for updates
 echo "{$c_yellow}Checking for updates...\r\n";
-$version = "6.0.0.7b";
+$version = "6.1.0.0b";
 $upfp = @fopen('http://lizardwiki.gewt.net/w/index.php?title=LizardBot/Latest&action=raw', 'r');
 $data = @fgets($upfp);
 @fclose($upfp);
@@ -285,18 +285,36 @@ EOD;
 	date_default_timezone_set($timezone);
 }
 echo "OK!";
+if($autoconnect['enabled']) {
+	echo <<<EOD
+\r\n{$c_yellow}ATTENTION!  Autoconnect directives are enabled in your configuration file!\r\n
+The bot will begin autoconnecting in 7 seconds... press ^C NOW if you do not want this to happen!{$c_n}\r\n
+EOD;
+	sleep(7);
+}
 echo <<<CONSOLEOUTPUT
 \n{$c_bold}Please enter the FULL address of the network you wish to join.\r\n
 Specify it as address:port.  If no port is specified, 6667 is used.\r\n
 {$c_ul}For example: irc.myircnetwork.com:8001 (REQUIRED): 
 CONSOLEOUTPUT;
-while(!$irc['address']) {
-	$irc['address'] = fgets(STDIN);
-	tr($irc['address']);
+if($autoconnect['enabled'] && $autoconnect['network']) {
+	$irc['address'] = $autoconnect['network'];
 	if(stristr($irc['address'], ":")) {
 		$temp = explode(":", $irc['address']);
 		$irc['address'] = $temp[0];
 		$irc['port'] = $temp[1];
+	}
+} elseif($autoconnect['enabled'] && !$autoconnect['network']) {
+	die("\r\n{$c_red}ERROR: Autoconnect is enabled, but no network was given in config file.{$c_n}\r\n");
+} elseif(!$autoconnect['enabled']) {
+	while(!$irc['address']) {
+		$irc['address'] = fgets(STDIN);
+		tr($irc['address']);
+		if(stristr($irc['address'], ":")) {
+			$temp = explode(":", $irc['address']);
+			$irc['address'] = $temp[0];
+			$irc['port'] = $temp[1];
+		}
 	}
 }
 if(!$irc['address']) {
@@ -309,8 +327,14 @@ echo <<<EOD
 enter, the default (in brackets) will be used\r\n
 {$c_ul}Nickname [$nickname]: 
 EOD;
-while(!$nick) {
-	fscanf(STDIN, "%s", $nick);
+if($autoconnect['enabled'] && $autoconnect['nick']) {
+	$nick = $autoconnect['nick'];
+} elseif($autoconnect['enabled'] && !$autoconnect['nick']) {
+	die("\r\n{$c_red}ERROR: Autoconnect is enabled, but no nickname was given in config file.{$c_n}\r\n");
+} elseif(!$autoconnect['enabled']) {
+	while(!$nick) {
+		fscanf(STDIN, "%s", $nick);
+	}
 }
 if($nick == ".") {
 	$nick = $nickname;
@@ -338,8 +362,14 @@ EOD;
 echo <<<EOD
 {$c_ul}Should I send identification information to NickServ? (yes/no, default no): 
 EOD;
-while(!$irc['identify']) {
-	fscanf(STDIN, "%s", $irc['identify']);
+if($autoconnect['enabled'] && $autoconnect['identify']) {
+	$irc['identify'] = $autoconnect['identify'];
+} elseif($autoconnect['enabled'] && !$autoconnect['identify']) {
+	die("\r\n{$c_red}ERROR: Autoconnect is enabled, but no id mode was given in the config file.{$c_n}\r\n");
+} elseif(!$autoconnect['enabled']) {
+	while(!$irc['identify']) {
+		fscanf(STDIN, "%s", $irc['identify']);
+	}
 }
 switch ($irc['identify']) {
 	case "yes":
@@ -373,8 +403,14 @@ you would like to use and strike enter.\r\n
 Please note that this is not the same as the bot nickname.\r\n
 {$c_ul}OK, what is the primary username on the account?{$irc['default-ns']}
 EOD;
-	while(!$NSUsername) {
-		fscanf(STDIN, "%s", $NSUsername);
+	if($autoconnect['enabled'] && $autoconnect['id-nick']) {
+		$NSUsername = $autoconnect['id-nick'];
+	} elseif($autoconnect['enabled'] && !$autoconnect['id-nick']) {
+		die("\r\n{$c_red}ERROR: Autoconnect is enabled, but no nickserv username is in the config file.{$c_white}\r\n");
+	} elseif(!$autoconnect['enabled']) {
+		while(!$NSUsername) {
+			fscanf(STDIN, "%s", $NSUsername);
+		}
 	}
 	if($NSUsername == ".") {
 		$irc['ns-username'] = $setNSUsername . " ";
@@ -402,8 +438,14 @@ IF YOU DO NOT WANT TO ENTER A PASSWORD AND ABORT IDENTIFICATION, ENTER "." AND
 STRIKE ENTER AT THIS PROMPT.\r\n
 {$c_ul}OK, what is the password?  
 EOD;
-	while(!$NSPassword) {
-		fscanf(STDIN, "%s", $NSPassword);
+	if($autoconnect['enabled'] && $autoconnect['id-pass']) {
+		$NSPassword = $autoconnect['id-pass'];
+	} elseif($autoconnect['enabled'] && !$autoconnect['id-pass']) {
+		die("\r\n{$c_red}ERROR: Autoconnect is enabled, but no nickserv password was given in config.{$c_n}\r\n");
+	} elseif(!$autoconnect['enabled']) {
+		while(!$NSPassword) {
+			fscanf(STDIN, "%s", $NSPassword);
+		}
 	}
 	if($NSPassword == ".") {
 		echo "{$c_n}{$c_yellow}No input received, WILL NOT IDENTIFY!\r\n";
@@ -415,6 +457,7 @@ EOD;
 		echo "{$c_n}{$c_green}Input received, using that to identify.\r\n";
 		$irc['identify'] = true;
 	}
+	unset($autoconnect['id-pass']); //For security purposes
 }
 /*foreach($irc as $key => $val) {
 	echo "$key => $val\r\n";
@@ -490,8 +533,14 @@ sleep(5);
 echo <<<CONSOLEOUTPUT
 \n{$c_ul}Please enter a comma-delimited list of channels to join: 
 CONSOLEOUTPUT;
-while(!$irc['channels']) {
-	fscanf(STDIN, "%s", $irc['channels']);
+if($autoconnect['enabled'] && $autoconnect['channels']) {
+	$irc['channels'] = $autoconnect['channels'];
+} elseif($autoconnect['enabled'] && !$autoconnect['channels']) {
+	die("\r\n{$c_red}ERROR: Autoconnect is enabled, but no channels were specified in config file.{$c_n}\r\n");
+} elseif(!$autoconnect['enabled']) {
+	while(!$irc['channels']) {
+		fscanf(STDIN, "%s", $irc['channels']);
+	}
 }
 echo <<<CONSOLEOUTPUT
 {$c_n}{$c_green}Input of "{$irc['channels']}" received!{$c_n}\n
@@ -1019,7 +1068,7 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
 	if($d[3] == "{$setTrigger}update" && hasPriv('*')) {
 		$cmdcount++;
 		echo "Checking for updates...\r\n";
-		$version = "6.0.0.7b";
+		$version = "6.1.0.0b";
 		$upfp = @fopen('http://lizardwiki.gewt.net/w/index.php?title=LizardBot/Latest&action=raw', 'r');
 		$data = @fgets($upfp);
 		@fclose($upfp);
