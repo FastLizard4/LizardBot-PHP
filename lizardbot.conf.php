@@ -45,7 +45,7 @@ YOUR TIMEZONE IS ALREADY DEFINED IN YOUR PHP CONFIGURATION FILE.
                     @fantasy-[on, off] commands override this.
 ##Windows configuration.  If you are running the bot on Windows, you must set this to true!!!!!
    $setIsOnWindows: Tells the bot that its running on Windows.  Automatically sets $setUsePCREs to true.  Please read
-                    the guide to running the bot on Windows here: http://scalar.cluenet.org/~fastlizard4/lizardbot.php?page=win
+                    the guide to running the bot on Windows here: http://lizardwiki.gewt.net/wiki/LizardBot/Windows
 [RECOMMENDED]
          $setGecos: Set the bot's gecos, or real name.  String.  Default: bot
          $setIdent: Set the bot's username if no ident reply is sent.  String. Default: bot
@@ -186,7 +186,7 @@ $setIsOnWindows = FALSE;
 #                       BLOCK                   #
 #################################################
   $setIdent = "LizardBot";
-  $setGecos = "PHP-LizardBot v{$version} - http://scalar.cluenet.org/~fastlizard4/lizardbot.php";
+  $setGecos = "PHP-LizardBot v{$version} - http://lizardwiki.gewt.net/wiki/LizardBot";
 $setTrigger = "@";
 
 #################################################
@@ -205,8 +205,8 @@ die(">>>PLEASE CONFIGURE THE BOT CORRECTLY!\r\n");
 #                       BLOCK                   #
 #################################################
 ##CTCP Configuration
-   $setCTCPVersion = "PHP-LizardBot (Written in PHP 5 Procedural by FastLizard4 and the LizardBot Development Team) v{$version} http://scalar.cluenet.org/~fastlizard4/lizardbot.php";
-  $setCTCPUserinfo = "PHP-LizardBot: Boldly Going Where No Bot Has Gone Before! - http://scalar.cluenet.org/~fastlizard4/lizardbot.php";
+   $setCTCPVersion = "PHP-LizardBot (Written in PHP 5 Procedural by FastLizard4 and the LizardBot Development Team) v{$version} http://lizardwiki.gewt.net/wiki/LizardBot";
+  $setCTCPUserinfo = "PHP-LizardBot: Boldly Going Where No Bot Has Gone Before! - http://lizardwiki.gewt.net/wiki/LizardBot";
 $setCTCPClientinfo = "I am PHP-LizardBot version {$version}.  I support these CTCP commands: VERSION TIME USERINFO CLIENTINFO";
 $setUnknownCTCP_RE = NULL; //Not yet implemented
 
