@@ -54,7 +54,7 @@ echo $c_green;
 |_____||_______| |________||_|      |_| |_|   \__\ |____/
 
 PHP-LizardBot: IRC bot developed by FastLizard4 (who else?) and the LizardBot Development Team
-Version 6.1.1.4b (major.minor.build.revision) BETA
+Version 6.1.2.4b (major.minor.build.revision) BETA
 Licensed under the Creative Commons GNU General Public License 2.0 (GPL)
 For licensing details, contact me or read this page:
 http://creativecommons.org/licenses/GPL/2.0/
@@ -90,7 +90,7 @@ PandoraBot extension courtesy of Ttech (PHP-5 OOP)
 <?php
 //Check for updates
 echo "{$c_yellow}Checking for updates...\r\n";
-$version = "6.1.1.4b";
+$version = "6.1.2.4b";
 $upfp = @fopen('http://lizardwiki.gewt.net/w/index.php?title=LizardBot/Latest&action=raw', 'r');
 $data = @fgets($upfp);
 @fclose($upfp);
@@ -1051,6 +1051,24 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
                 echo "-!- PRIVMSG $c :" . $e . $output . "\r\n";
 
 	}
+
+	if($d[3] == "{$setTrigger}tinyurl" && hasPriv('tinyurl') && $setEnableExec) {
+		 $cmdcount++;
+		 $tinyurl = trim($d[4]);
+		    if(!preg_match('/^http\:\/\/[^ ]+$/i',$tinyurl)) {
+			      fwrite($ircc, "PRIVMSG $c :Invalid URL provided.\r\n");
+				    }
+
+		    else {
+			  $tinyfp = @fopen("http://tinyurl.com/api-create.php?url={$tinyurl}","r");
+			  $tiny   = @fgets($tinyfp);
+			  fwrite($ircc,"PRIVMSG $c :$tiny\r\n");
+			    }
+		      }
+
+			  
+		 
+
 	if($d[3] == "{$setTrigger}eval" && hasPriv('eval') && $setEnableEval) {
 		$cmdcount++;
                 $tgc = $d[2];
@@ -1087,7 +1105,7 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
 	if($d[3] == "{$setTrigger}update" && hasPriv('*')) {
 		$cmdcount++;
 		echo "Checking for updates...\r\n";
-		$version = "6.1.1.4b";
+		$version = "6.1.2.4b";
 		$upfp = @fopen('http://lizardwiki.gewt.net/w/index.php?title=LizardBot/Latest&action=raw', 'r');
 		$data = @fgets($upfp);
 		@fclose($upfp);

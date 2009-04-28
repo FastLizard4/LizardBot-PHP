@@ -152,6 +152,7 @@ $privgroups[ '*'         ][ '*'           ] = 1;                      //All basi
 $privgroups[ '*'         ][ 'nyse'        ] = 1;
 $privgroups[ '*'         ][ 'fantasy'     ] = 1;
 $privgroups[ '*'         ][ 'insult'      ] = 1;
+$privgroups[ '*'         ][ 'tinyurl'     ] = 1;
 
 $privgroups[ 's-trusted' ]                  = $privgroups['*'];       // 's-trusted' inherits '*'
 $privgroups[ 's-trusted' ][ 'fap'         ] = 1;
@@ -175,6 +176,7 @@ $privgroups[ 'root'      ][ 'raw'         ] = 1;
 $privgroups[ 'root'      ][ 'nick'        ] = 1;
 $privgroups[ 'root'      ][ 'exec'        ] = 1;
 $privgroups[ 'root'      ][ 'eval'        ] = 1;
+
 
 ##Pandorabot config
 $setFantasy = FALSE;
