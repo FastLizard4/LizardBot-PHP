@@ -1,5 +1,6 @@
 #!/usr/bin/php
 <?php
+error_reporting(E_ALL & ~E_NOTICE);
 $cmdcount = 0;
 $pingcount = 0;
 $ctcpcount = 0;
@@ -54,7 +55,7 @@ echo $c_green;
 |_____||_______| |________||_|      |_| |_|   \__\ |____/
 
 PHP-LizardBot: IRC bot developed by FastLizard4 (who else?) and the LizardBot Development Team
-Version 6.1.2.5b (major.minor.build.revision) BETA
+Version 6.1.2.6b (major.minor.build.revision) BETA
 Licensed under the Creative Commons GNU General Public License 2.0 (GPL)
 For licensing details, contact me or read this page:
 http://creativecommons.org/licenses/GPL/2.0/
@@ -62,7 +63,7 @@ REPORT BUGS AND SUGGESTIONS TO BUGZILLA (http://scalar.cluenet.org/bugzilla)
 
 LICENSING DETAILS:
 PHP-LizardBot (IRC bot) written by FastLizard4 and the LizardBot Development Team
-Copyright (C) 2008 FastLizard4 and the LizardBot Development Team
+Copyright (C) 2008-2009 FastLizard4 and the LizardBot Development Team
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -90,7 +91,7 @@ PandoraBot extension courtesy of Ttech (PHP-5 OOP)
 <?php
 //Check for updates
 echo "{$c_yellow}Checking for updates...\r\n";
-$version = "6.1.2.5b";
+$version = "6.1.2.6b";
 $upfp = @fopen('http://lizardwiki.gewt.net/w/index.php?title=LizardBot/Latest&action=raw', 'r');
 $data = @fgets($upfp);
 @fclose($upfp);
@@ -1053,31 +1054,34 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
 	}
 
 	if($d[3] == "{$setTrigger}tinyurl" && hasPriv('tinyurl')) {
-		 $cmdcount++;
-		 $data = NULL;
-		 $tinyurl = trim($d[4]);
-		    if(!preg_match('/^http\:\/\/[^ ]+$/i',$tinyurl)) {
+		$cmdcount++;
+		$ndata = explode(":{$setTrigger}tinyurl ", $data);
+		$rdata = $ndata[1];
+		$data = NULL;
+		$tinyurl = trim($rdata);
+//		$tinyurl = urlencode($tinyurl);
+		if(!preg_match("#^(http|https)://.*$#i", $tinyurl)) {
 			$data = "Invalid URL.";
-                    } else {
-			  $tinyfp = @fopen("http://tinyurl.com/api-create.php?url={$tinyurl}","r") OR $data = "Error in connection to TinyURL API.";
-			  if(!$data) {
-				  $data   = @fgets($tinyfp);
-				  fclose($tinyfp); //Remember to close all sockets!
-			  }
+		} else {
+			$tinyfp = fopen("http://tinyurl.com/api-create.php?url={$tinyurl}","r") OR $data = "Error in connection to TinyURL API.";
+			if(!$data) {
+				$data   = fgets($tinyfp);
+				fclose($tinyfp); //Remember to close all sockets!
+			}
+		}
 		/* BEGIN DETERMINATION BLOCK */
-                $target = explode("!", $d[0]);
-                $e = $target[0] . ": ";
-                if($d[2] == $nick) {
-                        $target = explode("!", $d[0]);
-                        $c = $target[0];
-                        $e = NULL;
-                } else {
-                        $c = $d[2];
-                } /* END DETERMINATION BLOCK */
-                fwrite($ircc, "PRIVMSG $c :" . $e . $data . "\r\n");
-                echo "-!- PRIVMSG $c :" . $e . $data . "\r\n";
-		    }
-	  }
+		$target = explode("!", $d[0]);
+		$e = $target[0] . ": ";
+		if($d[2] == $nick) {
+			$target = explode("!", $d[0]);
+			$c = $target[0];
+			$e = NULL;
+		} else {
+			$c = $d[2];
+		} /* END DETERMINATION BLOCK */
+		fwrite($ircc, "PRIVMSG $c :" . $e . $data . "\r\n");
+		echo "-!- PRIVMSG $c :" . $e . $data . "\r\n";
+	}
 	if($d[3] == "{$setTrigger}eval" && hasPriv('eval') && $setEnableEval) {
 		$cmdcount++;
                 $tgc = $d[2];
@@ -1114,7 +1118,7 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
 	if($d[3] == "{$setTrigger}update" && hasPriv('*')) {
 		$cmdcount++;
 		echo "Checking for updates...\r\n";
-		$version = "6.1.2.5b";
+		$version = "6.1.2.6b";
 		$upfp = @fopen('http://lizardwiki.gewt.net/w/index.php?title=LizardBot/Latest&action=raw', 'r');
 		$data = @fgets($upfp);
 		@fclose($upfp);
