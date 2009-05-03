@@ -55,7 +55,7 @@ echo $c_green;
 |_____||_______| |________||_|      |_| |_|   \__\ |____/
 
 PHP-LizardBot: IRC bot developed by FastLizard4 (who else?) and the LizardBot Development Team
-Version 6.1.2.6b (major.minor.build.revision) BETA
+Version 6.1.3.0b (major.minor.build.revision) BETA
 Licensed under the Creative Commons GNU General Public License 2.0 (GPL)
 For licensing details, contact me or read this page:
 http://creativecommons.org/licenses/GPL/2.0/
@@ -91,7 +91,7 @@ PandoraBot extension courtesy of Ttech (PHP-5 OOP)
 <?php
 //Check for updates
 echo "{$c_yellow}Checking for updates...\r\n";
-$version = "6.1.2.6b";
+$version = "6.1.3.0b";
 $upfp = @fopen('http://lizardwiki.gewt.net/w/index.php?title=LizardBot/Latest&action=raw', 'r');
 $data = @fgets($upfp);
 @fclose($upfp);
@@ -211,6 +211,7 @@ if($setIsOnWindows) {
 	echo "Preparing signal handlers...\r\n";
 	declare(ticks = 1);
 	function SIGHUP() {
+		global $users, $privgroups;
 		echo "-!- Caught SIGHUP (1), now rehasing\r\n";
 		$rehash = TRUE;
 		include($dir);
@@ -218,6 +219,7 @@ if($setIsOnWindows) {
 		echo "-!- Rehash complete.\r\n";
 	}
 	function SIGTERM() {
+	global $c_n, $c_red;
 	//        die();
 	        global $ircc, $irc;
 	        fwrite($ircc, "QUIT :Oh noes! :O Caught deadly signal 15 SIGTERM!!\r\n");
@@ -229,6 +231,7 @@ IRCO;
 	        die("Caught SIGTERM!\n{$c_n}");
 	}
 	function SIGINT() {
+		global $c_n, $c_red;
 	        global $ircc, $irc;
 	        fwrite($ircc, "QUIT :Oh noes! :O Caught deadly SIGINT (^C) from terminal!!!\r\n");
 	        echo <<<IRCO
@@ -821,7 +824,7 @@ IRCO;
 		$target = $target[0];
 		$data = "NOTICE $target :";
 		$data .= chr(001);
-		$data .= "CLIENTINFO " . $setCTCPClientinfo;
+		$data .= "CLIENTINFO CLIENTINFO FINGER TIME USERINFO VERSION";
 		$data .= chr(001);
 		$data .= "\r\n";
 		fwrite($ircc, $data);
@@ -1050,9 +1053,7 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
 		$output = "Output: " . $returndata . "; Return: " . $return;
 		fwrite($ircc, "PRIVMSG $c :" . $e . $output . "\r\n");
                 echo "-!- PRIVMSG $c :" . $e . $output . "\r\n";
-
 	}
-
 	if($d[3] == "{$setTrigger}tinyurl" && hasPriv('tinyurl')) {
 		$cmdcount++;
 		$ndata = explode(":{$setTrigger}tinyurl ", $data);
@@ -1118,7 +1119,7 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
 	if($d[3] == "{$setTrigger}update" && hasPriv('*')) {
 		$cmdcount++;
 		echo "Checking for updates...\r\n";
-		$version = "6.1.2.6b";
+		$version = "6.1.3.0b";
 		$upfp = @fopen('http://lizardwiki.gewt.net/w/index.php?title=LizardBot/Latest&action=raw', 'r');
 		$data = @fgets($upfp);
 		@fclose($upfp);
@@ -1488,6 +1489,43 @@ STDOUT;
 		}
 		fwrite($ircc, "PRIVMSG $c :" . $e . $data . "\r\n");
 		echo "-!- PRIVMSG $c :" . $e . $data . "\r\n";
+	}
+	if($d[3] == "{$setTrigger}untiny" && hasPriv('tinyurl')) {
+		$tinynumber = $d[4];
+		$url = "http://tinyurl.com/preview.php?num={$tinynumber}";
+		$tinyurl = @fopen($url, 'r') OR $error = "Unable to connect to TinyURL to make the URL longer.  Perhaps the Internet needs help in maing the URL longer; give it some Viagra.";
+		$tinyOut = NULL;
+		if($error) {
+			$data = $error;
+		} else {
+			while(!feof($tinyurl)) {
+				if(!$tinyOut) {
+					$tinyOut = fgets($tinyurl);
+				} else {
+					$tinyOut .= fgets($tinyurl);
+				}
+			}
+			$parsed = array();
+			$parsed[0] = explode("<blockquote>", $tinyOut);
+			$parsed[1] = explode("</blockquote>", $parsed[0][1]);
+			$result = strip_tags($parsed[1][0]);
+			$data = trim($result);
+			if(!$data) {
+				$data = "Error in the input you gave me.  Remember that the only parameter this command needs is the NUMBER after http://tinyurl.com/, not the entire TinyURL.  Verify that the provided TinyURL ID is valid, and that you even provided an input.";
+			}
+		}
+		$target = explode("!", $d[0]);
+		$e = $target[0] . ": ";
+		if($d[2] == $nick) {
+			$target = explode("!", $d[0]);
+			$c = $target[0];
+			$e = NULL;
+		} else {
+			$c = $d[2];
+		}
+		fwrite($ircc, "PRIVMSG $c :" . $e . $data . "\r\n");
+		echo "-!- PRIVMSG $c :" . $e . $data . "\r\n";
+		fclose($tinyurl);
 	}
 }
 if($d[3] == "{$setTrigger}mute" && hasPriv('mute')) {

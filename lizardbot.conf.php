@@ -209,7 +209,6 @@ die(">>>PLEASE CONFIGURE THE BOT CORRECTLY!\r\n");
 ##CTCP Configuration
    $setCTCPVersion = "PHP-LizardBot (Written in PHP 5 Procedural by FastLizard4 and the LizardBot Development Team) v{$version} http://lizardwiki.gewt.net/wiki/LizardBot";
   $setCTCPUserinfo = "PHP-LizardBot: Boldly Going Where No Bot Has Gone Before! - http://lizardwiki.gewt.net/wiki/LizardBot";
-$setCTCPClientinfo = "I am PHP-LizardBot version {$version}.  I support these CTCP commands: VERSION TIME USERINFO CLIENTINFO";
 $setUnknownCTCP_RE = NULL; //Not yet implemented
 
        $setNoBolds = FALSE;
