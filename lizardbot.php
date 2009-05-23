@@ -55,7 +55,7 @@ echo $c_green;
 |_____||_______| |________||_|      |_| |_|   \__\ |____/
 
 PHP-LizardBot: IRC bot developed by FastLizard4 (who else?) and the LizardBot Development Team
-Version 6.2.0.1b (major.minor.build.revision) BETA
+Version 6.2.0.2b (major.minor.build.revision) BETA
 Licensed under the Creative Commons GNU General Public License 2.0 (GPL)
 For licensing details, contact me or read this page:
 http://creativecommons.org/licenses/GPL/2.0/
@@ -91,7 +91,7 @@ PandoraBot extension courtesy of Ttech (PHP-5 OOP)
 <?php
 //Check for updates
 echo "{$c_yellow}Checking for updates...\r\n";
-$version = "6.2.0.1b";
+$version = "6.2.0.2b";
 $upfp = @fopen('http://lizardwiki.gewt.net/w/index.php?title=LizardBot/Latest&action=raw', 'r');
 $data = @fgets($upfp);
 @fclose($upfp);
@@ -582,11 +582,13 @@ CONSOLEOUTPUT;
 	if(stream_select($toRead, $toWrite, $toExcept, $toTimeout) || $setEnableDelays) {
 		$data = str_replace(array("\n", "\r"), '', fgets($ircc, 1024));
 		echo $data . "\n";
-		$data2 = str_replace(":", "", $data);
-		$data3 = str_replace("$$", ":", $data2);
-		$d = explode(' ', $data3);
-		$c = $d[2];
+	} else {
+		$data = NULL;
 	}
+	$data2 = str_replace(":", "", $data);
+	$data3 = str_replace("$$", ":", $data2);
+	$d = explode(' ', $data3);
+	$c = $d[2];
 	if(!$muted) {
 		if($d[3] == "{$setTrigger}test"&& hasPriv('*')) {
 			$cmdcount++;
@@ -1125,7 +1127,7 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
 	if($d[3] == "{$setTrigger}update" && hasPriv('*')) {
 		$cmdcount++;
 		echo "Checking for updates...\r\n";
-		$version = "6.2.0.1b";
+		$version = "6.2.0.2b";
 		$upfp = @fopen('http://lizardwiki.gewt.net/w/index.php?title=LizardBot/Latest&action=raw', 'r');
 		$data = @fgets($upfp);
 		@fclose($upfp);
