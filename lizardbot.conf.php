@@ -81,11 +81,22 @@ $setMySQLDefaultDB: Set the default database in MySQL.  Recommended, but not nee
       $setUsePCREs: Instead of standard IRC hostmask syntax, use the more-powerful Perl Compatible
                     Regular Expressions.  Not recommended for novice users.  Boolean, default FALSE.
                     TRUE to use PCREs.
-                    
+
    $setInsultUsers: Throw insults like the Bard!  When set to true, allows use of the insult command.
                     See the documentation at http://lizardwiki.gewt.net/wiki/LizardBot/Docs for details.
                     Boolean, default TRUE.
 
+ $setEnableDelays: In favor of potentially reducing processor usage, DISABLES the stream select code that
+                   allows POSIX signals to be acted upon with no delay.  Effect on POSIX systems: Signals
+                   recognized by the bot (such as 1 SIGHUP, 2 SIGINT, and 15 SIGTERM) will encounter a delay
+                   up to a couple of minutes in favor of reducing processor usage.  If you are willing to allow
+                   the bot to utilize the processor, leave this set to false to allow immediate response on a
+                   recognized signal.  Has no effect on Windows sytems since Windows signals are acted upon
+                   immediately no matter what the type, you can set this either to TRUE or FALSE on Windows.
+                   FALSE to enable immediate signal responses AND increased CPU usage (up to 1.3% per 15 seconds
+                   idle), TRUE to disable immediate signal responses AND to decrease idle CPU usage.  No
+                   effect on Windows machines, only POSIX machines.
+ 
 [AUTOCONNECT BLOCK]
 This optional block, when configured, allows the bot to immeidately automatically connect to a network
 when the configuration file is loaded.  Note that it is unoveridable - the bot will not prompt at all.
@@ -222,17 +233,20 @@ $setUnknownCTCP_RE = NULL; //Not yet implemented
 $setMySQLDefaultDB = NULL;  //Not yet implemented
  $setMySQLTablePre = NULL;  //Not yet implemented
 
-$setNSPassword = NULL; //No longer implemented
-$setNSUsername = NULL;
+  $setNSPassword = NULL; //No longer implemented
+  $setNSUsername = NULL;
 
-$setEnableExec = FALSE;
-$setEnableEval = FALSE;
+##Misc configuration
+  $setEnableExec = FALSE;
+  $setEnableEval = FALSE;
 
-$setTrustGoogle = TRUE;
+ $setTrustGoogle = TRUE;
 
-$setUsePCREs = FALSE;
+    $setUsePCREs = FALSE;
 
-$setInsultUsers = TRUE;
+ $setInsultUsers = TRUE;
+
+$setEnableDelays = FALSE;
 
 #################################################
 #                   AUTOCONNECT                 #
