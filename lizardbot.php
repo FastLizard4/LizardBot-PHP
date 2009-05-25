@@ -6,6 +6,7 @@ $pingcount = 0;
 $ctcpcount = 0;
 $aicount = 0;
 $insultcount = 0;
+$fishcount = 0;
 echo "Determining what configuration file we should use...\r\n";
 $dir = $_SERVER['argv'][1];
 $cfg = FALSE;
@@ -55,7 +56,7 @@ echo $c_green;
 |_____||_______| |________||_|      |_| |_|   \__\ |____/
 
 PHP-LizardBot: IRC bot developed by FastLizard4 (who else?) and the LizardBot Development Team
-Version 6.2.0.3b (major.minor.build.revision) BETA
+Version 6.3.0.0b (major.minor.build.revision) BETA
 Licensed under the Creative Commons GNU General Public License 2.0 (GPL)
 For licensing details, contact me or read this page:
 http://creativecommons.org/licenses/GPL/2.0/
@@ -91,7 +92,7 @@ PandoraBot extension courtesy of Ttech (PHP-5 OOP)
 <?php
 //Check for updates
 echo "{$c_yellow}Checking for updates...\r\n";
-$version = "6.2.0.3b";
+$version = "6.3.0.0b";
 $upfp = @fopen('http://lizardwiki.gewt.net/w/index.php?title=LizardBot/Latest&action=raw', 'r');
 $data = @fgets($upfp);
 @fclose($upfp);
@@ -198,6 +199,101 @@ class pandorabot {
 
 }
 echo "Pandorabot class loaded!\r\n";
+echo "Preparing fishb0t module...\r\n";
+$fishCresponses = array
+	(
+                    '/hampster/i'            => '%n: There is no \'p\' in hamster you retard.',
+                    '/vinegar.*aftershock/i'    => 'Ah, a true connoisseur!',
+                    '/aftershock.*vinegar/i'    => 'Ah, a true connoisseur!',
+                    '/^some people are being fangoriously devoured by a gelatinous monster$/i'
+                                    => 'Hillary\'s legs are being digested.',
+                    '/^ag$/i'            => 'Ag, ag ag ag ag ag AG AG AG!',
+                    '/^(fishbot|%f) owns$/i'        => 'Aye, I do.',
+                    '/vinegar/i'            => 'Nope, too sober for vinegar.  Try later.',
+                    '/martian/i'            => 'Don\'t run! We are your friends!',
+                    '/^just then, he fell into the sea$/i'
+                                    => 'Ooops!',
+                    '/aftershock/i'            => 'mmmm, Aftershock.',
+                    '/^why are you here\?$/i'    => 'Same reason.  I love candy.',
+                    '/^spoon$/i'            => 'There is no spoon.',
+                    '/^(bounce|wertle)$/i'        => 'moo',
+                    '/^crack$/i'            => 'Doh, there goes another bench!',
+                    '/^you can\'t just pick people at random!$/i'
+                                    => 'I can do anything I like, %n, I\'m eccentric!  Rrarrrrrgh!  Go!',
+                    '/^flibble$/i'            => 'plob',
+                    '/(the fishbot has created splidge|fishbot created splidge)/i'
+                                    => 'omg no! Think I could show my face around here if I was responsible for THAT?',
+                    '/^now there\'s more than one of them\?$/i'
+                                    => 'A lot more.',
+                    '/^i want everything$/i'    => 'Would that include a bullet from this gun?',
+                    '/we are getting aggravated/i'    => 'Yes, we are.',
+                    '/^how old are you, (fishbot|%f)\?$/i'
+                                    => chr(1).'ACTION is older than time itself!'.chr(1),
+                    '/^atlantis$/i'            => 'Beware the underwater headquarters of the trout and their bass henchmen. From there they plan their attacks on other continents.',
+                    '/^oh god$/i'            => 'fishbot will suffice.',
+                    '/^(fishbot|%f)$/i'            => 'Yes?',
+                    '/^what is the matrix\?$/i'    => 'No-one can be told what the matrix is.  You have to see it for yourself.',
+                    '/^what do you need\?$/i'    => 'Guns. Lots of guns.',
+                    '/^i know kungfu$/i'        => 'Show me.',
+                    '/^cake$/i'            => 'fish',
+                    '/^trout go m[o0][o0]$/i'    => 'Aye, that\'s cos they\'re fish.',
+                    '/^kangaroo$/i'            => 'The kangaroo is a four winged stinging insect.',
+                    '/^sea bass$/i'            => 'Beware of the mutant sea bass and their laser cannons!',
+                    '/^trout$/i'            => 'Trout are freshwater fish and have underwater weapons.',
+                    '/has returned from playing counterstrike/i'
+                                    => 'like we care fs :(',
+                    '/^where are we\?$/i'        => 'Last time I looked, we were in %c.',
+                    '/^where do you want to go today\?$/i'
+                                    => 'anywhere but redmond :(.',
+                    '/^fish go m[o0][o0]$/i'    => chr(1).'ACTION notes that %n is truly enlightened.'.chr(1),
+                    '/^(.*) go m[o0][o0]$/i'    => '%n: only when they are impersonating fish.',
+                    '/^fish go ([a-z0-9 _]+)$/i'    => '%n LIES! Fish don\'t go %1! fish go m00!',
+                    '/^you know who else (.*)$/i'    => '%n: YA MUM!',
+                    '/^if there\'s one thing i know for sure, it\'s that fish don\'t m00\.?$/i'
+                                    => '%n: HERETIC! UNBELIEVER!',
+                    '/^(fishbot|%f): muahahaha\. ph33r the dark side\. :\)$/i'
+                                    => '%n: You smell :P',
+                    '/^ammuu\?$/i'            => '%n: fish go m00 oh yes they do!',
+                    '/^fish$/i'            => '%n: fish go m00!',
+                    '/^snake$/i'            => 'Ah snake a snake! Snake, a snake! Ooooh, it\'s a snake!',
+                    '/^carrots handbags cheese$/i'    => 'toilets russians planets hamsters weddings poets stalin KUALA LUMPUR! pygmies budgies KUALA LUMPUR!',
+                    '/sledgehammer/i'        => 'sledgehammers go quack!',
+                    '/^badger badger badger badger badger badger badger badger badger badger badger badger$/i'
+                                    => 'mushroom mushroom!',
+                    '/^moo\?$/i'            => 'To moo, or not to moo, that is the question. Whether \'tis nobler in the mind to suffer the slings and arrows of outrageous fish...',
+                    '/^herring$/i'            => 'herring(n): Useful device for chopping down tall trees. Also moos (see fish).',
+                    '/www\.outwar\.com/i'        => 'would you please GO AWAY with that outwar rubbish!',
+                    '/^god$/i'            => 'Sometimes the garbage disposal gods demand a spoon.'
+                );
+            
+            $fishAresponses = array
+                (
+                    '/hampster/i'            => '%n: There is no \'p\' in hamster you retard.',
+                    '/^feeds (fishbot|%f) hundreds and thousands$/i'
+                                    => 'MEDI.. er.. FISHBOT',
+                    '/(vinegar.*aftershock|aftershock.*vinegar)/i'
+                                    => 'Ah, a true connoisseur!',
+                    '/vinegar/i'            => 'Nope, too sober for vinegar.  Try later.',
+                    '/martians/i'            => 'Don\'t run! We are your friends!',
+                    '/aftershock/i'            => 'mmmm, Aftershock.',
+                    '/(the fishbot has created splidge|fishbot created splidge)/i'
+                                    => 'omg no! Think I could show my face around here if I was responsible for THAT?',
+                    '/we are getting aggravated/i'    => 'Yes, we are.',
+                    '/^strokes (fishbot|%f)$/i'        => chr(1).'ACTION m00s loudly at %n.'.chr(1),
+                    '/^slaps (.*) around a bit with a large trout$/i'
+                                    => 'trouted!',
+                    '/has returned from playing counterstrike/i'
+                                    => 'like we care fs :(',
+                    '/^fish go m[o0][o0]$/i'    => chr(1).'ACTION notes that %n is truly enlightened.'.chr(1),
+                    '/^(.*) go m[o0][o0]$/i'    => '%n: only when they are impersonating fish.',
+                    '/^fish go ([a-z0-9 _]+)$/i'    => '%n LIES! Fish don\'t go %1! fish go m00!',
+                    '/^you know who else (.*)$/i'    => '%n: YA MUM!',
+                    '/^thinks happy thoughts about pretty (.*)$/i'
+                                    => chr(1).'ACTION has plenty of pretty %1. Would you like one %n?'.chr(1),
+                    '/^snaffles a (.*) off (fishbot|%f).?$/i'
+                                    => ':('
+                );
+echo "Fishb0t module readied!  FISH GO M00 OH YES THEY DO! [citation needed]\r\n";
 /**********************************************
 END PANDORABOT
 **********************************************/
@@ -1127,7 +1223,7 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
 	if($d[3] == "{$setTrigger}update" && hasPriv('*')) {
 		$cmdcount++;
 		echo "Checking for updates...\r\n";
-		$version = "6.2.0.3b";
+		$version = "6.3.0.0b";
 		$upfp = @fopen('http://lizardwiki.gewt.net/w/index.php?title=LizardBot/Latest&action=raw', 'r');
 		$data = @fgets($upfp);
 		@fclose($upfp);
@@ -1485,7 +1581,7 @@ STDOUT;
 		$uptime['current'] = gmdate('H:i:s', time() - $uptime['start']);
 		$uptime['current'] = $uptime['days'] . ' days, ' . $uptime['current'];
 		$php_os = PHP_OS;
-		$data = "I am bot {$nick}. Software: PHP-LizardBot v{$version} (http://lizardwiki.gewt.net/wiki/LizardBot) on OS {$php_os}; Uptime: {$uptime['current']}; I have been used a total of {$totalcount} times (Commands: {$cmdcount} [Of which, {$insultcount} were insult commands], Server pings: {$pingcount}, Recognized CTCPs: {$ctcpcount}, AI calls: {$aicount}).";
+		$data = "I am bot {$nick}. Software: PHP-LizardBot v{$version} (http://lizardwiki.gewt.net/wiki/LizardBot) on OS {$php_os}; Uptime: {$uptime['current']}; I have been used a total of {$totalcount} times (Commands: {$cmdcount} [Of which, {$insultcount} were insult commands], Server pings: {$pingcount}, Recognized CTCPs: {$ctcpcount}, AI calls: {$aicount}, Fishbot calls: {$fishcount}).";
 		$target = explode("!", $d[0]);
 		$e = $target[0] . ": ";
 		if($d[2] == $nick) {
@@ -1535,6 +1631,117 @@ STDOUT;
 		fwrite($ircc, "PRIVMSG $c :" . $e . $data . "\r\n");
 		echo "-!- PRIVMSG $c :" . $e . $data . "\r\n";
 		fclose($tinyurl);
+	}
+	if($d[3] == "{$setTrigger}fish" && hasPriv('*')) {
+		$cmdcount++;
+		if($setEnableFishbot) {
+			$data = "Fishb0t module is enabled.";
+		} else {
+			$data = "Fishb0t module is disabled.";
+		}
+		$target = explode("!", $d[0]);
+		$e = $target[0] . ": ";
+		if($d[2] == $nick) {
+			$target = explode("!", $d[0]);
+			$c = $target[0];
+			$e = NULL;
+		} else {
+			$c = $d[2];
+		}
+		fwrite($ircc, "PRIVMSG $c :" . $e . $data . "\r\n");
+		echo "-!- PRIVMSG $c :" . $e . $data . "\r\n";
+	}
+	if($d[3] == "{$setTrigger}fish-on" && hasPriv('mute')) {
+		$setEnableFishbot = TRUE;
+		$data = "Fishb0t enabled!";
+		$target = explode("!", $d[0]);
+		$e = $target[0] . ": ";
+		if($d[2] == $nick) {
+			$target = explode("!", $d[0]);
+			$c = $target[0];
+			$e = NULL;
+		} else {
+			$c = $d[2];
+		}
+		fwrite($ircc, "PRIVMSG $c :" . $e . $data . "\r\n");
+		echo "-!- PRIVMSG $c :" . $e . $data . "\r\n";
+	}
+	if($d[3] == "{$setTrigger}fish-off" && hasPriv('mute')) {
+		$setEnableFishbot = FALSE;
+		$data = "Fishb0t disabled!";
+		$target = explode("!", $d[0]);
+		$e = $target[0] . ": ";
+		if($d[2] == $nick) {
+			$target = explode("!", $d[0]);
+			$c = $target[0];
+			$e = NULL;
+		} else {
+			$c = $d[2];
+		}
+		fwrite($ircc, "PRIVMSG $c :" . $e . $data . "\r\n");
+		echo "-!- PRIVMSG $c :" . $e . $data . "\r\n";
+	}
+	if($setEnableFishbot && hasPriv('fish')) {
+		$stop = FALSE;
+		$target = explode("!", $d[0]);
+		$e = $target[0];
+		if($d[2] == $nick) {
+			$target = explode("!", $d[0]);
+			$c = $target[0];
+			$e = NULL;
+		} else {
+			$c = $d[2];
+		}
+		unset($d[0], $d[1], $d[2]);
+		$fishdata = trim(implode(" ", $d));
+		if($fishdata) {
+			$data = NULL;
+			if(preg_match("/" . chr(001) . "ACTION.*/i", $fishdata)) {
+				//Type is CTCP ACTION
+				//$after = explode("\001ACTION", $d[3]);
+				//$new = explode("\001", $after[1]);
+				//$toProcess = trim($new[0]);
+				$toProcess = str_replace(array("\001ACTION ","\001"), array('',''), $fishdata);
+				/*
+				foreach($fishAresponses AS $regex => $response) {
+					if(preg_match($regex, $toProcess)) {
+						$data = $response;
+					} else {
+						$data = NULL;
+					}
+				} */
+				foreach($fishAresponses as $regex2 => $mtpl) {
+					$regex = str_replace('%f', $nick, $regex2);
+					if(preg_match($regex,$toProcess,$m) && !$stop) {
+						$data = str_replace(array('%n','%c','%1'),array($e,$c,$m[1]),$mtpl);
+						$stop = TRUE;
+					}
+				}
+			} else {
+				//Type is standard message
+				/*
+				foreach($fishCresponses AS $regex => $response) {
+					if(preg_match($regex, trim($d[3]))) {
+						$data = $response;
+					} else {
+						$data = NULL;
+					}
+				}*/
+				foreach($fishCresponses as $regex2 => $mtpl) {
+					$regex = str_replace('%f', $nick, $regex2);
+					if(preg_match($regex,$fishdata,$m) && !$stop) {
+						$data = str_replace(array('%n','%c','%1'),array($e,$c,$m[1]),$mtpl);
+						$stop = TRUE;
+					}
+				}
+			}
+			if($data) {
+				fwrite($ircc, "PRIVMSG $c :" . $data . "\r\n");
+				echo "-!- PRIVMSG $c :" . $data . "\r\n";
+				$fishcount++;
+			}
+		}
+		unset($fishdata, $toProcess);
 	}
 }
 if($d[3] == "{$setTrigger}mute" && hasPriv('mute')) {

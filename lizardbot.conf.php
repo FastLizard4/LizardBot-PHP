@@ -96,6 +96,7 @@ $setMySQLDefaultDB: Set the default database in MySQL.  Recommended, but not nee
                    FALSE to enable immediate signal responses AND increased CPU usage (up to 1.3% per 15 seconds
                    idle), TRUE to disable immediate signal responses AND to decrease idle CPU usage.  No
                    effect on Windows machines, only POSIX machines.
+$setEnableFishbot: Whether or not to enable fishb0t.  Boolean, FALSE by default.
  
 [AUTOCONNECT BLOCK]
 This optional block, when configured, allows the bot to immeidately automatically connect to a network
@@ -164,6 +165,7 @@ $privgroups[ '*'         ][ 'nyse'        ] = 1;
 $privgroups[ '*'         ][ 'fantasy'     ] = 1;
 $privgroups[ '*'         ][ 'insult'      ] = 1;
 $privgroups[ '*'         ][ 'tinyurl'     ] = 1;
+$privgroups[ '*'         ][ 'fish'        ] = 1;
 
 $privgroups[ 's-trusted' ]                  = $privgroups['*'];       // 's-trusted' inherits '*'
 $privgroups[ 's-trusted' ][ 'fap'         ] = 1;
@@ -247,6 +249,8 @@ $setMySQLDefaultDB = NULL;  //Not yet implemented
  $setInsultUsers = TRUE;
 
 $setEnableDelays = FALSE;
+
+$setEnableFishbot = FALSE;
 
 #################################################
 #                   AUTOCONNECT                 #
