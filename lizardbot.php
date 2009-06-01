@@ -56,7 +56,7 @@ echo $c_green;
 |_____||_______| |________||_|      |_| |_|   \__\ |____/
 
 PHP-LizardBot: IRC bot developed by FastLizard4 (who else?) and the LizardBot Development Team
-Version 6.3.0.0b (major.minor.build.revision) BETA
+Version 6.3.0.1b (major.minor.build.revision) BETA
 Licensed under the Creative Commons GNU General Public License 2.0 (GPL)
 For licensing details, contact me or read this page:
 http://creativecommons.org/licenses/GPL/2.0/
@@ -92,7 +92,7 @@ PandoraBot extension courtesy of Ttech (PHP-5 OOP)
 <?php
 //Check for updates
 echo "{$c_yellow}Checking for updates...\r\n";
-$version = "6.3.0.0b";
+$version = "6.3.0.1b";
 $upfp = @fopen('http://lizardwiki.gewt.net/w/index.php?title=LizardBot/Latest&action=raw', 'r');
 $data = @fgets($upfp);
 @fclose($upfp);
@@ -263,7 +263,10 @@ $fishCresponses = array
                     '/^moo\?$/i'            => 'To moo, or not to moo, that is the question. Whether \'tis nobler in the mind to suffer the slings and arrows of outrageous fish...',
                     '/^herring$/i'            => 'herring(n): Useful device for chopping down tall trees. Also moos (see fish).',
                     '/www\.outwar\.com/i'        => 'would you please GO AWAY with that outwar rubbish!',
-                    '/^god$/i'            => 'Sometimes the garbage disposal gods demand a spoon.'
+                    '/^god$/i'            => 'Sometimes the garbage disposal gods demand a spoon.',
+                    '/stupid bot[!?.]*$/i' => '%n: Stupid human.',
+                    '/fail bot[!?.]*$/i' => '%n: Fail human.',
+                    '/ping[!?.]*$/i' => '%n: pong.'
                 );
             
             $fishAresponses = array
@@ -1223,7 +1226,7 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
 	if($d[3] == "{$setTrigger}update" && hasPriv('*')) {
 		$cmdcount++;
 		echo "Checking for updates...\r\n";
-		$version = "6.3.0.0b";
+		$version = "6.3.0.1b";
 		$upfp = @fopen('http://lizardwiki.gewt.net/w/index.php?title=LizardBot/Latest&action=raw', 'r');
 		$data = @fgets($upfp);
 		@fclose($upfp);
@@ -1575,7 +1578,7 @@ STDOUT;
 	}
 	if($d[3] == "{$setTrigger}status" && hasPriv('*')) {
 		$cmdcount++;
-		$totalcount = $cmdcount + $pingcount + $ctcpcount + $aicount;
+		$totalcount = $cmdcount + $pingcount + $ctcpcount + $aicount + $fishcount;
 		$uptime['days'] = (time() - $uptime['start'])/86400;
 		$uptime['days'] = floor($uptime['days']);
 		$uptime['current'] = gmdate('H:i:s', time() - $uptime['start']);
