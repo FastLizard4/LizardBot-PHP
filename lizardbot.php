@@ -265,8 +265,7 @@ $fishCresponses = array
                     '/www\.outwar\.com/i'        => 'would you please GO AWAY with that outwar rubbish!',
                     '/^god$/i'            => 'Sometimes the garbage disposal gods demand a spoon.',
                     '/stupid bot[!?.]*$/i' => '%n: Stupid human.',
-                    '/fail bot[!?.]*$/i' => '%n: Fail human.',
-                    '/ping[!?.]*$/i' => '%n: pong.'
+                    '/fail bot[!?.]*$/i' => '%n: Fail human.'
                 );
             
             $fishAresponses = array
@@ -1226,7 +1225,7 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
 	if($d[3] == "{$setTrigger}update" && hasPriv('*')) {
 		$cmdcount++;
 		echo "Checking for updates...\r\n";
-		$version = "6.3.0.1b";
+		$version = "6.3.0.2b";
 		$upfp = @fopen('http://lizardwiki.gewt.net/w/index.php?title=LizardBot/Latest&action=raw', 'r');
 		$data = @fgets($upfp);
 		@fclose($upfp);
