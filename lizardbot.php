@@ -1475,7 +1475,7 @@ STDOUT;
 		 *Variables used:
 		 **
 		 **********************/
-		$editcount['user'] = $d[4];
+/*		$editcount['user'] = $d[4];
 		$editcount['wiki'] = $d[6];
 		$editcount['lang'] = $d[5];
 		if(!$editcount['wiki']) { $editcount['wiki'] = "wikipedia"; }
