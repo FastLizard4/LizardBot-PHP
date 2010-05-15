@@ -45,7 +45,7 @@ YOUR TIMEZONE IS ALREADY DEFINED IN YOUR PHP CONFIGURATION FILE.
                     @fantasy-[on, off] commands override this.
 ##Windows configuration.  If you are running the bot on Windows, you must set this to true!!!!!
    $setIsOnWindows: Tells the bot that its running on Windows.  Automatically sets $setUsePCREs to true.  Please read
-                    the guide to running the bot on Windows here: http://lizardwiki.gewt.net/wiki/LizardBot/Windows
+                    the guide to running the bot on Windows here: http://lizardwiki.dyndns.org/wiki/LizardBot/Windows
 [RECOMMENDED]
          $setGecos: Set the bot's gecos, or real name.  String.  Default: bot
          $setIdent: Set the bot's username if no ident reply is sent.  String. Default: bot
@@ -83,7 +83,7 @@ $setMySQLDefaultDB: Set the default database in MySQL.  Recommended, but not nee
                     TRUE to use PCREs.
 
    $setInsultUsers: Throw insults like the Bard!  When set to true, allows use of the insult command.
-                    See the documentation at http://lizardwiki.gewt.net/wiki/LizardBot/Docs for details.
+                    See the documentation at http://lizardwiki.dyndns.org/wiki/LizardBot/Docs for details.
                     Boolean, default TRUE.
 
  $setEnableDelays: In favor of potentially reducing processor usage, DISABLES the stream select code that
@@ -201,7 +201,7 @@ $setIsOnWindows = FALSE;
 #                       BLOCK                   #
 #################################################
   $setIdent = "LizardBot";
-  $setGecos = "PHP-LizardBot v{$version} - http://lizardwiki.gewt.net/wiki/LizardBot";
+  $setGecos = "PHP-LizardBot v{$version} - http://lizardwiki.dyndns.org/wiki/LizardBot";
 $setTrigger = "@";
 
 #################################################
@@ -220,8 +220,8 @@ die(">>>PLEASE CONFIGURE THE BOT CORRECTLY!\r\n");
 #                       BLOCK                   #
 #################################################
 ##CTCP Configuration
-   $setCTCPVersion = "PHP-LizardBot (Written in PHP 5 Procedural by FastLizard4 and the LizardBot Development Team) v{$version} http://lizardwiki.gewt.net/wiki/LizardBot";
-  $setCTCPUserinfo = "PHP-LizardBot: Boldly Going Where No Bot Has Gone Before! - http://lizardwiki.gewt.net/wiki/LizardBot";
+   $setCTCPVersion = "PHP-LizardBot (Written in PHP 5 Procedural by FastLizard4 and the LizardBot Development Team) v{$version} http://lizardwiki.dyndns.org/wiki/LizardBot";
+  $setCTCPUserinfo = "PHP-LizardBot: Boldly Going Where No Bot Has Gone Before! - http://lizardwiki.dyndns.org/wiki/LizardBot";
 $setUnknownCTCP_RE = NULL; //Not yet implemented
 
        $setNoBolds = FALSE;

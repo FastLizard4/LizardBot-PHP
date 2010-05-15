@@ -56,7 +56,7 @@ echo $c_green;
 |_____||_______| |________||_|      |_| |_|   \__\ |____/
 
 PHP-LizardBot: IRC bot developed by FastLizard4 (who else?) and the LizardBot Development Team
-Version 6.3.0.2b (major.minor.build.revision) BETA
+Version 6.3.0.3b (major.minor.build.revision) BETA
 Licensed under the Creative Commons GNU General Public License 2.0 (GPL)
 For licensing details, contact me or read this page:
 http://creativecommons.org/licenses/GPL/2.0/
@@ -92,8 +92,8 @@ PandoraBot extension courtesy of Ttech (PHP-5 OOP)
 <?php
 //Check for updates
 echo "{$c_yellow}Checking for updates...\r\n";
-$version = "6.3.0.2b";
-$upfp = @fopen('http://lizardwiki.gewt.net/w/index.php?title=LizardBot/Latest&action=raw', 'r');
+$version = "6.3.0.3b";
+$upfp = @fopen('http://lizardwiki.dyndns.org/w/index.php?title=LizardBot/Latest&action=raw', 'r');
 $data = @fgets($upfp);
 @fclose($upfp);
 if(!$data) {
@@ -265,7 +265,8 @@ $fishCresponses = array
                     '/www\.outwar\.com/i'        => 'would you please GO AWAY with that outwar rubbish!',
                     '/^god$/i'            => 'Sometimes the garbage disposal gods demand a spoon.',
                     '/stupid bot[!?.]*$/i' => '%n: Stupid human.',
-                    '/fail bot[!?.]*$/i' => '%n: Fail human.'
+                    '/fail bot[!?.]*$/i' => '%n: Fail human.',
+		    '/good bot[!?.]*$/i' => chr(1).'ACTION purrs at %n'.chr(1)
                 );
             
             $fishAresponses = array
@@ -993,7 +994,7 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
 		sleep(1);
 		fwrite($ircc, "PRIVMSG $c :$target2: Extensions: Pandorabot by Ttech (PHP-5-OOP)\r\n");
 		sleep(2);*/
-		fwrite($ircc, "PRIVMSG $c :$target2: For help and copyrights, see http://lizardwiki.gewt.net/wiki/LizardBot\r\n");
+		fwrite($ircc, "PRIVMSG $c :$target2: For help and copyrights, see http://lizardwiki.dyndns.org/wiki/LizardBot\r\n");
 		echo "
 -!- $target2 requested {$setTrigger}info\n
 ";
@@ -1225,8 +1226,8 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
 	if($d[3] == "{$setTrigger}update" && hasPriv('*')) {
 		$cmdcount++;
 		echo "Checking for updates...\r\n";
-		$version = "6.3.0.2b";
-		$upfp = @fopen('http://lizardwiki.gewt.net/w/index.php?title=LizardBot/Latest&action=raw', 'r');
+		$version = "6.3.0.3b";
+		$upfp = @fopen('http://lizardwiki.dyndns.org/w/index.php?title=LizardBot/Latest&action=raw', 'r');
 		$data = @fgets($upfp);
 		@fclose($upfp);
                 $target = explode("!", $d[0]);
@@ -1244,7 +1245,7 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
 		if($data == $version) {
 		        $output = "LizardBot is up-to-date";
 		} else {
-		        $output = "LizardBot version {$data} is available.  Please update, or get details at http://lizardwiki.gewt.net/wiki/LizardBot/CL#latest";
+		        $output = "LizardBot version {$data} is available.  Please update, or get details at http://lizardwiki.dyndns.org/wiki/LizardBot/CL#latest";
 		}
                 fwrite($ircc, "PRIVMSG $c :" . $e . $output . "\r\n");
                 echo "-!- PRIVMSG $c :" . $e . $output . "\r\n";
@@ -1464,7 +1465,7 @@ STDOUT;
 		unset($tnick);
 		unset($stopExecution);
 	}
-	if($d[3] == "{$setTrigger}editcount" && hasPriv('*')) {
+/*	if($d[3] == "{$setTrigger}editcount" && hasPriv('*')) {
 		$cmdcount++;
 		$error = FALSE;
 		/************************
@@ -1531,7 +1532,7 @@ STDOUT;
 		fwrite($ircc, "PRIVMSG $c :" . $e . $data . "\r\n");
 		echo "-!- PRIVMSG $c :" . $e . $data . "\r\n";
 		unset($error, $editcount, $data, $soxtoolURL, $soxtool, $soxtoolOut, $c, $e, $target);
-	}
+	} */
 	if($d[3] == "{$setTrigger}insult" && hasPriv('insult') && $setInsultUsers) {
 		$insultcount++;
 		$cmdcount++;
@@ -1583,7 +1584,7 @@ STDOUT;
 		$uptime['current'] = gmdate('H:i:s', time() - $uptime['start']);
 		$uptime['current'] = $uptime['days'] . ' days, ' . $uptime['current'];
 		$php_os = PHP_OS;
-		$data = "I am bot {$nick}. Software: PHP-LizardBot v{$version} (http://lizardwiki.gewt.net/wiki/LizardBot) on OS {$php_os}; Uptime: {$uptime['current']}; I have been used a total of {$totalcount} times (Commands: {$cmdcount} [Of which, {$insultcount} were insult commands], Server pings: {$pingcount}, Recognized CTCPs: {$ctcpcount}, AI calls: {$aicount}, Fishbot calls: {$fishcount}).";
+		$data = "I am bot {$nick}. Software: PHP-LizardBot v{$version} (http://lizardwiki.dyndns.org/wiki/LizardBot) on OS {$php_os}; Uptime: {$uptime['current']}; I have been used a total of {$totalcount} times (Commands: {$cmdcount} [Of which, {$insultcount} were insult commands], Server pings: {$pingcount}, Recognized CTCPs: {$ctcpcount}, AI calls: {$aicount}, Fishbot calls: {$fishcount}).";
 		$target = explode("!", $d[0]);
 		$e = $target[0] . ": ";
 		if($d[2] == $nick) {
