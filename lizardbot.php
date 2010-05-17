@@ -56,7 +56,7 @@ echo $c_green;
 |_____||_______| |________||_|      |_| |_|   \__\ |____/
 
 PHP-LizardBot: IRC bot developed by FastLizard4 (who else?) and the LizardBot Development Team
-Version 6.3.0.3b (major.minor.build.revision) BETA
+Version 6.3.1.0b (major.minor.build.revision) BETA
 Licensed under the Creative Commons GNU General Public License 2.0 (GPL)
 For licensing details, contact me or read this page:
 http://creativecommons.org/licenses/GPL/2.0/
@@ -92,7 +92,7 @@ PandoraBot extension courtesy of Ttech (PHP-5 OOP)
 <?php
 //Check for updates
 echo "{$c_yellow}Checking for updates...\r\n";
-$version = "6.3.0.3b";
+$version = "6.3.1.0b";
 $upfp = @fopen('http://lizardwiki.dyndns.org/w/index.php?title=LizardBot/Latest&action=raw', 'r');
 $data = @fgets($upfp);
 @fclose($upfp);
@@ -999,6 +999,16 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
 -!- $target2 requested {$setTrigger}info\n
 ";
 	}
+	if(preg_match('/^[,.?!@#$%^&*-+_=|]+help$/', $d[3]) && $setEnableAllTriggerHelp && hasPriv('*') && $d[3] != "{$setTrigger}help") {
+                $cmdcount++;
+                $target = explode("!", $d[0]);
+                $target2 = $target[0];
+                if(!stristr($d[2], "#")) {
+                        $c = $target2[0];
+                }
+		fwrite($ircc, "PRIVMSG $c :$target2: You have triggered my general help command by using a \"standard\" bot trigger that is not my normal trigger.  For your reference, my normal trigger (which you must use for triggering all my commands) is {$setTrigger}\r\n");
+                fwrite($ircc, "PRIVMSG $c :$target2: For help and copyrights, see http://lizardwiki.dyndns.org/wiki/LizardBot\r\n");
+	}
 	if($d[3] == "{$setTrigger}nyse" && hasPriv('nyse')) {
 		$cmdcount++;
 		$symbol = $d[4];
@@ -1226,7 +1236,7 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
 	if($d[3] == "{$setTrigger}update" && hasPriv('*')) {
 		$cmdcount++;
 		echo "Checking for updates...\r\n";
-		$version = "6.3.0.3b";
+		$version = "6.3.1.0b";
 		$upfp = @fopen('http://lizardwiki.dyndns.org/w/index.php?title=LizardBot/Latest&action=raw', 'r');
 		$data = @fgets($upfp);
 		@fclose($upfp);
@@ -1426,27 +1436,18 @@ STDOUT;
 			$stopExecution = TRUE;
 		}
 		if(!$stopExecution) {
-			$googleOut2 = explode("<div id=res", $googleOut);
-			$googleOut3 = explode("<font size=-1", $googleOut2[1]);
-			$googleOut4 = explode("<b>", $googleOut3[0]);
-			$googleOut5 = explode("</b>", $googleOut4[1]);
+			//Note: The following code comes from http://www.hawkee.com/snippet/5812/ and is modified to work here
+	                $f = array("Â", "<font size=-2> </font>", " &#215; 10", "<sup>", "</sup>");$t = array("", "", "e", "^", "");
+	                preg_match('/<h2 class=r style="font-size:138%"><b>(.*?)<\/b><\/h2>/', $googleOut, $matches);
+	                if (!$matches['1']){
+	                        $data = 'Your input could not be processed..';
+	                } else {
+	                        $data = str_replace($f, $t, $matches['1']);
+	                }
 		}
-		unset($googleOut2);
-		unset($googleOut3);
-		unset($googleOut4);
 		unset($googleOut);
 		unset($toGoogle);
 		unset($googleURL);
-		if(!$stopExecution) {
-			$predata =  $googleOut5[0];
-			$predata2 = html_entity_decode($predata);
-			$predata3 = str_replace("<sup>", "^", $predata2);
-			$data = strip_tags($predata3);
-			unset($predata);
-			unset($predata2);
-			unset($predata3);
-		}
-		unset($googleOut5);
 		$target = explode("!", $tt);
 		$e = $target[0] . ": ";
 		if($tnick == $nick) {

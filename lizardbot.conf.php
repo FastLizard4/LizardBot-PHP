@@ -56,47 +56,53 @@ YOUR TIMEZONE IS ALREADY DEFINED IN YOUR PHP CONFIGURATION FILE.
     $setNSUsername: The default NickServ username
 [OPTIONAL]
 ##CTCP Configuration
-   $setCTCPVersion: Set the CTCP VERSION reply.  String, null for no reply.
-  $setCTCPUserinfo: Set the CTCP USERINFO reply.  String, null for no reply.
-$setCTCPClientinfo: Set the CTCP CLIENTINFO reply.  String, null for no reply.
-$setUnknownCTCP_RE: Set the reply for unknown CTCPs.  String, null for no reply.
+         $setCTCPVersion: Set the CTCP VERSION reply.  String, null for no reply.
+        $setCTCPUserinfo: Set the CTCP USERINFO reply.  String, null for no reply.
+      $setCTCPClientinfo: Set the CTCP CLIENTINFO reply.  String, null for no reply.
+      $setUnknownCTCP_RE: Set the reply for unknown CTCPs.  String, null for no reply.
 
-       $setNoBolds: Supress bolds.  Boolean, true to hide.
-   $setAIDefaultRE: Sets the default AI response.  String.
+             $setNoBolds: Supress bolds.  Boolean, true to hide.
+         $setAIDefaultRE: Sets the default AI response.  String.
 
 ##MySQL Configuration
-   $setEnableMySQL: Set to true to enable MySQL.  Boolean.
- $setMySQLUserName: Set the MySQL username.  String.
-     $setMySQLHost: Set the host for the MySQL database.  String.
-     $setMySQLPort: Set the port for the MySQL database.  Integer.
-$setMySQLDefaultDB: Set the default database in MySQL.  Recommended, but not needed.
- $setMySQLTablePre: Set the table prefix.  String, default NULL.
+         $setEnableMySQL: Set to true to enable MySQL.  Boolean.
+       $setMySQLUserName: Set the MySQL username.  String.
+           $setMySQLHost: Set the host for the MySQL database.  String.
+           $setMySQLPort: Set the port for the MySQL database.  Integer.
+      $setMySQLDefaultDB: Set the default database in MySQL.  Recommended, but not needed.
+       $setMySQLTablePre: Set the table prefix.  String, default NULL.
 
-    $setEnableExec: Whether or not to enable the @exec command.  Boolean, true to enable.
-    $setEnableEval: Whehter or not to enable the @eval command.  Boolean, true to enable.
+          $setEnableExec: Whether or not to enable the @exec command.  Boolean, true to enable.
+          $setEnableEval: Whehter or not to enable the @eval command.  Boolean, true to enable.
 
-   $setTrustGoogle: If, for some reason, you are extremely paranoid and don't trust the Google,
-                    set this to false.  Boolean, default TRUE.
+         $setTrustGoogle: If, for some reason, you are extremely paranoid and don't trust the Google,
+                          set this to false.  Boolean, default TRUE.
                     
-      $setUsePCREs: Instead of standard IRC hostmask syntax, use the more-powerful Perl Compatible
-                    Regular Expressions.  Not recommended for novice users.  Boolean, default FALSE.
-                    TRUE to use PCREs.
+            $setUsePCREs: Instead of standard IRC hostmask syntax, use the more-powerful Perl Compatible
+                          Regular Expressions.  Not recommended for novice users.  Boolean, default FALSE.
+                          TRUE to use PCREs.
 
-   $setInsultUsers: Throw insults like the Bard!  When set to true, allows use of the insult command.
-                    See the documentation at http://lizardwiki.dyndns.org/wiki/LizardBot/Docs for details.
-                    Boolean, default TRUE.
+         $setInsultUsers: Throw insults like the Bard!  When set to true, allows use of the insult command.
+                          See the documentation at http://lizardwiki.dyndns.org/wiki/LizardBot/Docs for details.
+                          Boolean, default TRUE.
 
- $setEnableDelays: In favor of potentially reducing processor usage, DISABLES the stream select code that
-                   allows POSIX signals to be acted upon with no delay.  Effect on POSIX systems: Signals
-                   recognized by the bot (such as 1 SIGHUP, 2 SIGINT, and 15 SIGTERM) will encounter a delay
-                   up to a couple of minutes in favor of reducing processor usage.  If you are willing to allow
-                   the bot to utilize the processor, leave this set to false to allow immediate response on a
-                   recognized signal.  Has no effect on Windows sytems since Windows signals are acted upon
-                   immediately no matter what the type, you can set this either to TRUE or FALSE on Windows.
-                   FALSE to enable immediate signal responses AND increased CPU usage (up to 1.3% per 15 seconds
-                   idle), TRUE to disable immediate signal responses AND to decrease idle CPU usage.  No
-                   effect on Windows machines, only POSIX machines.
-$setEnableFishbot: Whether or not to enable fishb0t.  Boolean, FALSE by default.
+        $setEnableDelays: In favor of potentially reducing processor usage, DISABLES the stream select code that
+                          allows POSIX signals to be acted upon with no delay.  Effect on POSIX systems: Signals
+                          recognized by the bot (such as 1 SIGHUP, 2 SIGINT, and 15 SIGTERM) will encounter a delay
+                          up to a couple of minutes in favor of reducing processor usage.  If you are willing to allow
+                          the bot to utilize the processor, leave this set to false to allow immediate response on a
+                          recognized signal.  Has no effect on Windows sytems since Windows signals are acted upon
+                          immediately no matter what the type, you can set this either to TRUE or FALSE on Windows.
+                          FALSE to enable immediate signal responses AND increased CPU usage (up to 1.3% per 15 seconds
+                          idle), TRUE to disable immediate signal responses AND to decrease idle CPU usage.  No
+                          effect on Windows machines, only POSIX machines.
+
+       $setEnableFishbot: Whether or not to enable fishb0t.  Boolean, FALSE by default.
+
+$setEnableAllTriggerHelp: Whether or not to enable a special help command that responds on all normal bot triggers, not
+                          just the one that was assigned using the $setTrigger option.  Note that this only applies to
+                          the help command, and all other commands must still be called with the bot's normal trigger
+                          defined by $setTrigger.  Boolean, TRUE by default.
  
 [AUTOCONNECT BLOCK]
 This optional block, when configured, allows the bot to immeidately automatically connect to a network
@@ -251,6 +257,8 @@ $setMySQLDefaultDB = NULL;  //Not yet implemented
 $setEnableDelays = FALSE;
 
 $setEnableFishbot = FALSE;
+
+$setEnableAllTriggerHelp = TRUE;
 
 #################################################
 #                   AUTOCONNECT                 #
