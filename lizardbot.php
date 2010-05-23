@@ -56,7 +56,7 @@ echo $c_green;
 |_____||_______| |________||_|      |_| |_|   \__\ |____/
 
 PHP-LizardBot: IRC bot developed by FastLizard4 (who else?) and the LizardBot Development Team
-Version 6.3.1.0b (major.minor.build.revision) BETA
+Version 6.3.1.1b (major.minor.build.revision) BETA
 Licensed under the Creative Commons GNU General Public License 2.0 (GPL)
 For licensing details, contact me or read this page:
 http://creativecommons.org/licenses/GPL/2.0/
@@ -92,7 +92,7 @@ PandoraBot extension courtesy of Ttech (PHP-5 OOP)
 <?php
 //Check for updates
 echo "{$c_yellow}Checking for updates...\r\n";
-$version = "6.3.1.0b";
+$version = "6.3.1.1b";
 $upfp = @fopen('http://lizardwiki.dyndns.org/w/index.php?title=LizardBot/Latest&action=raw', 'r');
 $data = @fgets($upfp);
 @fclose($upfp);
@@ -247,7 +247,7 @@ $fishCresponses = array
                                     => 'anywhere but redmond :(.',
                     '/^fish go m[o0][o0]$/i'    => chr(1).'ACTION notes that %n is truly enlightened.'.chr(1),
                     '/^(.*) go m[o0][o0]$/i'    => '%n: only when they are impersonating fish.',
-                    '/^fish go ([a-z0-9 _]+)$/i'    => '%n LIES! Fish don\'t go %1! fish go m00!',
+                    '/^fish go (.+)$/i'    => '%n LIES! Fish don\'t go %1! fish go m00!',
                     '/^you know who else (.*)$/i'    => '%n: YA MUM!',
                     '/^if there\'s one thing i know for sure, it\'s that fish don\'t m00\.?$/i'
                                     => '%n: HERETIC! UNBELIEVER!',
@@ -266,7 +266,12 @@ $fishCresponses = array
                     '/^god$/i'            => 'Sometimes the garbage disposal gods demand a spoon.',
                     '/stupid bot[!?.]*$/i' => '%n: Stupid human.',
                     '/fail bot[!?.]*$/i' => '%n: Fail human.',
-		    '/good bot[!?.]*$/i' => chr(1).'ACTION purrs at %n'.chr(1)
+		    '/good bot[!?.]*$/i' => chr(1).'ACTION purrs at %n'.chr(1),
+		    '/^I am the Doctor,? and you are the Daleks!?$/i' => 'WE ARE THE DALEKS!! Exterminate! EXTEEERRRRMIIINAAAATE!',
+		    '/^ping$/i' => 'pong',
+		    '/^pong$/i' => 'pang',
+		    '/^pang$/i' => 'pung',
+		    '/^pung$/i' => 'ping'
                 );
             
             $fishAresponses = array
@@ -289,12 +294,19 @@ $fishCresponses = array
                                     => 'like we care fs :(',
                     '/^fish go m[o0][o0]$/i'    => chr(1).'ACTION notes that %n is truly enlightened.'.chr(1),
                     '/^(.*) go m[o0][o0]$/i'    => '%n: only when they are impersonating fish.',
-                    '/^fish go ([a-z0-9 _]+)$/i'    => '%n LIES! Fish don\'t go %1! fish go m00!',
+                    '/^fish go (.+)$/i'    => '%n LIES! Fish don\'t go %1! fish go m00!',
                     '/^you know who else (.*)$/i'    => '%n: YA MUM!',
                     '/^thinks happy thoughts about pretty (.*)$/i'
                                     => chr(1).'ACTION has plenty of pretty %1. Would you like one %n?'.chr(1),
                     '/^snaffles a (.*) off (fishbot|%f).?$/i'
-                                    => ':('
+                                    => ':(',
+                    '/stupid bot[!?.]*$/i' => '%n: Stupid human.',
+                    '/fail bot[!?.]*$/i' => '%n: Fail human.',
+                    '/good bot[!?.]*$/i' => chr(1).'ACTION purrs at %n'.chr(1),
+                    '/^ping$/i' => 'pong',
+                    '/^pong$/i' => 'pang',
+                    '/^pang$/i' => 'pung',
+                    '/^pung$/i' => 'ping'
                 );
 echo "Fishb0t module readied!  FISH GO M00 OH YES THEY DO! [citation needed]\r\n";
 /**********************************************
@@ -1236,7 +1248,7 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
 	if($d[3] == "{$setTrigger}update" && hasPriv('*')) {
 		$cmdcount++;
 		echo "Checking for updates...\r\n";
-		$version = "6.3.1.0b";
+		$version = "6.3.1.1b";
 		$upfp = @fopen('http://lizardwiki.dyndns.org/w/index.php?title=LizardBot/Latest&action=raw', 'r');
 		$data = @fgets($upfp);
 		@fclose($upfp);
@@ -1557,10 +1569,10 @@ STDOUT;
 			$data = trim($result);
 		}
 		$target = explode("!", $d[0]);
-		if($d[4] && $d[4] != $nick) {
+		if($d[4] && strcasecmp($d[4], $nick)) {
 			$e = $d[4] . ": ";
 		} else {
-			if($d[4] == $nick) {
+			if(!strcasecmp($d[4], $nick)) {
 				$e = $target[0] . ": I refuse to insult myself, so I will now insult you.  ";
 			} else {
 				$e = $target[0] . ": ";
