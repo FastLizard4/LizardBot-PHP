@@ -271,7 +271,7 @@ $fishCresponses = array
 		    '/^ping$/i' => 'pong',
 		    '/^pong$/i' => 'pang',
 		    '/^pang$/i' => 'pung',
-		    '/^pung$/i' => 'ping'
+		    '/^pung$/i' => 'derp'
                 );
             
             $fishAresponses = array
@@ -306,7 +306,7 @@ $fishCresponses = array
                     '/^ping$/i' => 'pong',
                     '/^pong$/i' => 'pang',
                     '/^pang$/i' => 'pung',
-                    '/^pung$/i' => 'ping'
+                    '/^pung$/i' => 'derp'
                 );
 echo "Fishb0t module readied!  FISH GO M00 OH YES THEY DO! [citation needed]\r\n";
 /**********************************************
