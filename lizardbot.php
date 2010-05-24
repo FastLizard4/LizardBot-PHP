@@ -56,7 +56,7 @@ echo $c_green;
 |_____||_______| |________||_|      |_| |_|   \__\ |____/
 
 PHP-LizardBot: IRC bot developed by FastLizard4 (who else?) and the LizardBot Development Team
-Version 6.3.1.1b (major.minor.build.revision) BETA
+Version 6.3.1.2b (major.minor.build.revision) BETA
 Licensed under the Creative Commons GNU General Public License 2.0 (GPL)
 For licensing details, contact me or read this page:
 http://creativecommons.org/licenses/GPL/2.0/
@@ -92,7 +92,7 @@ PandoraBot extension courtesy of Ttech (PHP-5 OOP)
 <?php
 //Check for updates
 echo "{$c_yellow}Checking for updates...\r\n";
-$version = "6.3.1.1b";
+$version = "6.3.1.2b";
 $upfp = @fopen('http://lizardwiki.dyndns.org/w/index.php?title=LizardBot/Latest&action=raw', 'r');
 $data = @fgets($upfp);
 @fclose($upfp);
@@ -1248,7 +1248,7 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
 	if($d[3] == "{$setTrigger}update" && hasPriv('*')) {
 		$cmdcount++;
 		echo "Checking for updates...\r\n";
-		$version = "6.3.1.1b";
+		$version = "6.3.1.2b";
 		$upfp = @fopen('http://lizardwiki.dyndns.org/w/index.php?title=LizardBot/Latest&action=raw', 'r');
 		$data = @fgets($upfp);
 		@fclose($upfp);
