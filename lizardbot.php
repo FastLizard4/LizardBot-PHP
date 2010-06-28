@@ -56,7 +56,7 @@ echo $c_green;
 |_____||_______| |________||_|      |_| |_|   \__\ |____/
 
 PHP-LizardBot: IRC bot developed by FastLizard4 (who else?) and the LizardBot Development Team
-Version 6.3.1.2b (major.minor.build.revision) BETA
+Version 7.0.0.0b (major.minor.build.revision) BETA
 Licensed under the Creative Commons GNU General Public License 2.0 (GPL)
 For licensing details, contact me or read this page:
 http://creativecommons.org/licenses/GPL/2.0/
@@ -64,7 +64,7 @@ REPORT BUGS AND SUGGESTIONS TO BUGZILLA (http://scalar.cluenet.org/bugzilla)
 
 LICENSING DETAILS:
 PHP-LizardBot (IRC bot) written by FastLizard4 and the LizardBot Development Team
-Copyright (C) 2008-2009 FastLizard4 and the LizardBot Development Team
+Copyright (C) 2008-2010 FastLizard4 and the LizardBot Development Team
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -92,7 +92,7 @@ PandoraBot extension courtesy of Ttech (PHP-5 OOP)
 <?php
 //Check for updates
 echo "{$c_yellow}Checking for updates...\r\n";
-$version = "6.3.1.2b";
+$version = "7.0.0.0b";
 $upfp = @fopen('http://lizardwiki.dyndns.org/w/index.php?title=LizardBot/Latest&action=raw', 'r');
 $data = @fgets($upfp);
 @fclose($upfp);
@@ -388,6 +388,57 @@ if(!$nickname) {
 }
 if(!$setTrigger) {
 	$setTrigger = "@";
+}
+if(!$setEnableMySQL) {
+	echo "{$c_yellow}MySQL and all commands requiring MySQL are disabled.{$c_n}\r\n";
+}
+if($setEnableMySQL) {
+	echo "{$c_green}MySQL support enabled!{$c_n}\r\n";
+	if(!$setMySQLHost) {
+		die("{$c_red}MySQL database server address not specified (\$setMySQLHost)!{$c_n}\r\n");
+	} elseif(!$setMySQLPort) {
+		echo "{$c_yellow}No port for connecting to the MySQL server specified, will use\r\n";
+		echo "default of 3306...{$c_n}\r\n";
+		$setMySQLPort = 3306;
+	} elseif(!$setMySQLUserName) {
+		die("{$c_red}No MySQL database connection username specified!{$c_n}\r\n");
+	} elseif(!$setMySQLPassword) {
+		echo "{$c_yellow}Really?  No password for connecting to MySQL specified.\r\n";
+		echo "If none is needed, you're doing it wrong....{$c_n}\r\n";
+	} elseif(!$setMySQLDB) {
+		die("{$c_red}No MySQL database to use specified in the config file!{$c_n}\r\n");
+	}
+	if($setMySQLTablePre) {
+		$setMySQLTablePre .= "_";
+	}
+	echo "Creating the MySQL-related functions....\r\n";
+	function dbConnect() {
+		global $setMySQLHost, $setMySQLPort, $setMySQLUserName, $setMySQLPassword, $setMySQLDB;
+		$mysql =  mysqli_connect($setMySQLHost, $setMySQLUserName, $setMySQLPassword, $setMySQLDB, $setMySQLPort) OR
+		print("{$c_red}Failed to connect to the MySQL server!  Details:\r\n" .
+		mysqli_connect_error() . "{$c_n}\r\n");
+		return $mysql;
+	}
+	function mkSane($mysql, $data) {
+		return trim(mysqli_real_escape_string($mysql, $data));
+	}
+	function dbQuery($mysql, $query, &$result) {
+	        $result = mysqli_query($mysql, $query);
+	        if(!$result) {
+	                echo "\r\nERROR: An error occured in the database query:\r\n";
+	                echo "\t" . $query . "\r\n";
+	                echo "MySQL returned the following error:\r\n";
+	                echo "\t" . mysqli_error($mysql) . "\r\n";
+	                return "An error occured in the MySQL database query.  Please check the console for details.";
+	        } else {
+	                return false;
+	        }
+	}
+	echo "Verifying connection to MySQL database....";
+	$mysql = dbConnect();
+	if(!mysql) {die();}
+	mysqli_close($mysql);
+	echo "{$_green}    done!{$c_n}\r\n";
 }
 if(!$timezone) {
 	echo <<<EOD
@@ -1248,7 +1299,7 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
 	if($d[3] == "{$setTrigger}update" && hasPriv('*')) {
 		$cmdcount++;
 		echo "Checking for updates...\r\n";
-		$version = "6.3.1.2b";
+		$version = "7.0.0.0b";
 		$upfp = @fopen('http://lizardwiki.dyndns.org/w/index.php?title=LizardBot/Latest&action=raw', 'r');
 		$data = @fgets($upfp);
 		@fclose($upfp);
@@ -1696,6 +1747,131 @@ STDOUT;
 		}
 		fwrite($ircc, "PRIVMSG $c :" . $e . $data . "\r\n");
 		echo "-!- PRIVMSG $c :" . $e . $data . "\r\n";
+	}
+	if($setEnableReminders && $setEnableMySQL) {
+		if(!is_array($reminder)) { //Build the array from database
+			$reminder = array();
+			$query = "SELECT `reminder_id`, `reminder_target_nick` FROM `{$setMySQLTablePre}reminders` ORDER BY `reminder_id` ASC";
+			$mysql = dbConnect();
+			$r = dbQuery($mysql, $query, $result);
+			if($r) {
+				$setEnableReminders = false; //This is a sorta permament error
+			} else {
+				while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+					$reminder[$row['reminder_id']] = $row['reminder_target_nick'];
+				}
+				mysqli_free_result($result);
+			}
+			mysqli_close($mysql);
+		}
+		//Code to allow adding reminders:
+		if($d[3] == "{$setTrigger}remind" && hasPriv('remind')) {
+			$reminderReminder = $d[0];
+	                $target = explode("!", $d[0]);
+	                $e = $target[0] . ": ";
+	                if($d[2] == $nick) {
+	                        $target = explode("!", $d[0]);
+	                        $c = $target[0];
+	                        $e = NULL;
+	                } else {
+	                        $c = $d[2];
+	                }
+			if(!$d[5]) {
+				$data = "ERROR: Too few parameters for the @remind command.  Syntax: @remind <target> <message>";
+			} else {
+				$d[0] = NULL;
+				$d[1] = NULL;
+				$d[2] = NULL;
+				$d[3] = NULL;
+				$reminderTarget = $d[4];
+				$d[4] = NULL;
+				$reminderText = implode(' ', $d);
+				$reminderTime = gmdate("Y-m-d H:i:s");
+				//Ok, we have all the variables we need, so sanitize input and build the query:
+				$mysql = dbConnect();
+				if(!$mysql) { $data = "Eror connecting to MySQL."; }
+				$reminderTarget = mkSane($mysql, $reminderTarget);
+				$reminderReminder = mkSane($mysql, $reminderReminder);
+				$reminderText = mkSane($mysql, $reminderText);
+				$reminderTime = mkSane($mysql, $reminderTime);
+				//Get the definitions set up
+				$query = "INSERT INTO `{$setMySQLTablePre}reminders` (`reminder_text`, `reminder_target_nick`, `reminder_time`, `reminder_requester`) VALUES ('{$reminderText}', '{$reminderTarget}', 	'{$reminderTime}', '{$reminderReminder}')";
+				if(dbQuery($mysql, $query, $result)) {
+					//Fail!
+					$data = "An error occured executing the database query.  Check the console for details.";
+				} else {
+					//Success
+					//Reload the array!
+		                        $reminders = array();
+		                        $reminder = array();
+		                        $query = "SELECT `reminder_id`, `reminder_target_nick` FROM `{$setMySQLTablePre}reminders` ORDER BY `reminder_id` ASC";
+		                        $r = dbQuery($mysql, $query, $result);
+					$data = NULL;
+		                        if($r) {
+						$data = "Hmm, there was an error reloading the array.... ";
+		                        } else {
+		                                while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+		                                        $reminder[$row['reminder_id']] = $row['reminder_target_nick'];
+		                                }
+		                                mysqli_free_result($result);
+		                        }
+					$data .= "OK, I'll tell them the next time I see them talk, or when they join a channel I'm in.";
+				}
+				unset($result);
+				mysqli_close($mysql);
+			}
+	                fwrite($ircc, "PRIVMSG $c :" . $e . $data . "\r\n");
+	                echo "-!- PRIVMSG $c :" . $e . $data . "\r\n";
+		}
+		//Code to allow retrieval of reminders, ignoring PMs to the bot
+		if(($d[1] == "PRIVMSG" || $d[1] == "JOIN") && $d[2] != $nick) {
+			$success = false;
+			$t = explode('!', $d[0]);
+			$userNick = $t[0];
+			$t = explode('@', $d[0]);
+			$userHost = $t[1];
+			$data = NULL;
+			foreach($reminder as $id => $target) {
+				if(stristr($userNick, $target) || stristr($userHost, $target)) {
+					//We have a winner!
+					$mysql = dbConnect();
+					$query = "SELECT `reminder_text`, `reminder_time`, `reminder_requester` FROM `{$setMySQLTablePre}reminders` WHERE `reminder_target_nick`='{$target}'";
+					if(dbQuery($mysql, $query, $result)) {
+						//FAIL!
+						$data = "An error occured in the database query.  Check the console for details.";
+					} else {
+						//Success!
+						$success = true;
+						while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+							$message = "{$userNick}: {$row['reminder_requester']} asked me at {$row['reminder_time']} (Y-M-D H:M:S, UTC) to tell you {$row['reminder_text']}.";
+							fwrite($ircc, "PRIVMSG {$d[2]} :{$message}\r\n");
+						}
+						mysqli_free_result($result);
+					}
+					//...now delete those messages from the database.
+					if($success) {
+						$query = "DELETE FROM `{$setMySQLTablePre}reminders` WHERE `reminder_target_nick`='{$target}'";
+						dbQuery($mysql, $query, $result); unset($result);
+					}
+					mysqli_close($mysql);
+				}
+			}
+			if($success) { //Reload the arrays now, too
+	                        $reminder = array();
+	                        $query = "SELECT `reminder_id`, `reminder_target_nick` FROM `{$setMySQLTablePre}reminders` ORDER BY `reminder_id` ASC";
+	                        $mysql = dbConnect();
+	                        $r = dbQuery($mysql, $query, $result);
+	                        if($r) {
+					//Do nothing, it shouldn't cause *that* much harm....
+	                        } else {
+	                                while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+	                                        $reminder[$row['reminder_id']] = $row['reminder_target_nick'];
+	                                }
+	                                mysqli_free_result($result);
+	                        }
+	                        mysqli_close($mysql);
+			}
+		}
 	}
 	if($setEnableFishbot && hasPriv('fish')) {
 		$stop = FALSE;

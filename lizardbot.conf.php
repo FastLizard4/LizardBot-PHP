@@ -65,12 +65,13 @@ YOUR TIMEZONE IS ALREADY DEFINED IN YOUR PHP CONFIGURATION FILE.
          $setAIDefaultRE: Sets the default AI response.  String.
 
 ##MySQL Configuration
-         $setEnableMySQL: Set to true to enable MySQL.  Boolean.
+         $setEnableMySQL: Set to true to enable MySQL and all commands that require MySQL.  Boolean.
        $setMySQLUserName: Set the MySQL username.  String.
+       $setMySQLPassword: Set the MySQL connection password.  String.
            $setMySQLHost: Set the host for the MySQL database.  String.
            $setMySQLPort: Set the port for the MySQL database.  Integer.
-      $setMySQLDefaultDB: Set the default database in MySQL.  Recommended, but not needed.
-       $setMySQLTablePre: Set the table prefix.  String, default NULL.
+             $setMySQLDB: Set the database to be used.  String.
+       $setMySQLTablePre: Set the table prefix.  String, default 'lb'.
 
           $setEnableExec: Whether or not to enable the @exec command.  Boolean, true to enable.
           $setEnableEval: Whehter or not to enable the @eval command.  Boolean, true to enable.
@@ -103,6 +104,9 @@ $setEnableAllTriggerHelp: Whether or not to enable a special help command that r
                           just the one that was assigned using the $setTrigger option.  Note that this only applies to
                           the help command, and all other commands must still be called with the bot's normal trigger
                           defined by $setTrigger.  Boolean, TRUE by default.
+
+     $setEnableReminders: Whether or not to enable the @remind command.  Boolean, TRUE by default.  REQUIRES MYSQL
+                          TO BE ENABLED!
  
 [AUTOCONNECT BLOCK]
 This optional block, when configured, allows the bot to immeidately automatically connect to a network
@@ -172,6 +176,7 @@ $privgroups[ '*'         ][ 'fantasy'     ] = 1;
 $privgroups[ '*'         ][ 'insult'      ] = 1;
 $privgroups[ '*'         ][ 'tinyurl'     ] = 1;
 $privgroups[ '*'         ][ 'fish'        ] = 1;
+$pvivgroups[ '*'         ][ 'remind'      ] = 1;
 
 $privgroups[ 's-trusted' ]                  = $privgroups['*'];       // 's-trusted' inherits '*'
 $privgroups[ 's-trusted' ][ 'fap'         ] = 1;
@@ -234,12 +239,13 @@ $setUnknownCTCP_RE = NULL; //Not yet implemented
    $setAIDefaultRE = "Probably";
 
 ##MySQL configuration
-   $setEnableMySQL = NULL;  //Not yet implemented
- $setMySQLUserName = NULL;  //Not yet implemented
-     $setMySQLHost = NULL;  //Not yet implemented
-     $setMySQLPort = NULL;  //Not yet implemented
-$setMySQLDefaultDB = NULL;  //Not yet implemented
- $setMySQLTablePre = NULL;  //Not yet implemented
+   $setEnableMySQL = FALSE;
+ $setMySQLUserName = NULL;
+ $setMySQLPassword = NULL;
+     $setMySQLHost = 'localhost';
+     $setMySQLPort = 3306;
+       $setMySQLDB = NULL;
+ $setMySQLTablePre = 'lb';
 
   $setNSPassword = NULL; //No longer implemented
   $setNSUsername = NULL;
@@ -259,6 +265,8 @@ $setEnableDelays = FALSE;
 $setEnableFishbot = FALSE;
 
 $setEnableAllTriggerHelp = TRUE;
+
+$setEnableReminders = TRUE;
 
 #################################################
 #                   AUTOCONNECT                 #
