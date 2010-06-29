@@ -56,7 +56,7 @@ echo $c_green;
 |_____||_______| |________||_|      |_| |_|   \__\ |____/
 
 PHP-LizardBot: IRC bot developed by FastLizard4 (who else?) and the LizardBot Development Team
-Version 7.0.0.1b (major.minor.build.revision) BETA
+Version 7.0.0.2b (major.minor.build.revision) BETA
 Licensed under the Creative Commons GNU General Public License 2.0 (GPL)
 For licensing details, contact me or read this page:
 http://creativecommons.org/licenses/GPL/2.0/
@@ -92,7 +92,7 @@ PandoraBot extension courtesy of Ttech (PHP-5 OOP)
 <?php
 //Check for updates
 echo "{$c_yellow}Checking for updates...\r\n";
-$version = "7.0.0.1b";
+$version = "7.0.0.2b";
 $upfp = @fopen('http://lizardwiki.dyndns.org/w/index.php?title=LizardBot/Latest&action=raw', 'r');
 $data = @fgets($upfp);
 @fclose($upfp);
@@ -1305,7 +1305,7 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
 	if($d[3] == "{$setTrigger}update" && hasPriv('*')) {
 		$cmdcount++;
 		echo "Checking for updates...\r\n";
-		$version = "7.0.0.1b";
+		$version = "7.0.0.2b";
 		$upfp = @fopen('http://lizardwiki.dyndns.org/w/index.php?title=LizardBot/Latest&action=raw', 'r');
 		$data = @fgets($upfp);
 		@fclose($upfp);
@@ -1785,14 +1785,11 @@ STDOUT;
 			if(!$d[5]) {
 				$data = "ERROR: Too few parameters for the @remind command.  Syntax: @remind <target> <message>";
 			} else {
-				$d[0] = NULL;
-				$d[1] = NULL;
-				$d[2] = NULL;
-				$d[3] = NULL;
 				$reminderTarget = $d[4];
-				$d[4] = NULL;
-				$reminderText = implode(' ', $d);
+				$reminderText = explode("{$setTrigger}remind {$d[4]}", $data);
+				$reminderText = trim($reminderText[1]);
 				$reminderTime = gmdate("Y-m-d H:i:s");
+				$d[0] = NULL; //Clear this so that the bot doesn't instantly remind the requester if the reminder is a self-reminder
 				//Ok, we have all the variables we need, so sanitize input and build the query:
 				$mysql = dbConnect();
 				if(!$mysql) { $data = "Eror connecting to MySQL."; }
@@ -1821,7 +1818,7 @@ STDOUT;
 		                                }
 		                                mysqli_free_result($result);
 		                        }
-					$data .= "OK, I'll tell them the next time I see them talk, or when they join a channel I'm in.";
+					$data .= "OK, I'll tell them the next time I see them talk in a channel I'm in.";
 				}
 				unset($result);
 				mysqli_close($mysql);
@@ -1830,7 +1827,7 @@ STDOUT;
 	                echo "-!- PRIVMSG $c :" . $e . $data . "\r\n";
 		}
 		//Code to allow retrieval of reminders, ignoring PMs to the bot
-		if(($d[1] == "PRIVMSG" || $d[1] == "JOIN") && $d[2] != $nick) {
+		if($d[1] == "PRIVMSG" && $d[2] != $nick) {
 			$success = false;
 			$t = explode('!', $d[0]);
 			$userNick = $t[0];
@@ -1849,7 +1846,7 @@ STDOUT;
 						//Success!
 						$success = true;
 						while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
-							$message = "{$userNick}: {$row['reminder_requester']} asked me at {$row['reminder_time']} (Y-M-D H:M:S, UTC) to tell you {$row['reminder_text']}.";
+							$message = "{$userNick}: {$row['reminder_requester']} asked me at {$row['reminder_time']} (Y-M-D H:M:S, UTC) to tell you {$row['reminder_text']}";
 							fwrite($ircc, "PRIVMSG {$d[2]} :{$message}\r\n");
 						}
 						mysqli_free_result($result);
