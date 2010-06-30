@@ -56,7 +56,7 @@ echo $c_green;
 |_____||_______| |________||_|      |_| |_|   \__\ |____/
 
 PHP-LizardBot: IRC bot developed by FastLizard4 (who else?) and the LizardBot Development Team
-Version 7.0.0.2b (major.minor.build.revision) BETA
+Version 7.0.0.3b (major.minor.build.revision) BETA
 Licensed under the Creative Commons GNU General Public License 2.0 (GPL)
 For licensing details, contact me or read this page:
 http://creativecommons.org/licenses/GPL/2.0/
@@ -92,7 +92,7 @@ PandoraBot extension courtesy of Ttech (PHP-5 OOP)
 <?php
 //Check for updates
 echo "{$c_yellow}Checking for updates...\r\n";
-$version = "7.0.0.2b";
+$version = "7.0.0.3b";
 $upfp = @fopen('http://lizardwiki.dyndns.org/w/index.php?title=LizardBot/Latest&action=raw', 'r');
 $data = @fgets($upfp);
 @fclose($upfp);
@@ -1305,7 +1305,7 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
 	if($d[3] == "{$setTrigger}update" && hasPriv('*')) {
 		$cmdcount++;
 		echo "Checking for updates...\r\n";
-		$version = "7.0.0.2b";
+		$version = "7.0.0.3b";
 		$upfp = @fopen('http://lizardwiki.dyndns.org/w/index.php?title=LizardBot/Latest&action=raw', 'r');
 		$data = @fgets($upfp);
 		@fclose($upfp);
@@ -1835,7 +1835,7 @@ STDOUT;
 			$userHost = $t[1];
 			$data = NULL;
 			foreach($reminder as $id => $target) {
-				if(stristr($userNick, $target) || stristr($userHost, $target)) {
+				if(stristr($userNick, $target) || stristr($userHost, $target) == $target) {
 					//We have a winner!
 					$mysql = dbConnect();
 					$query = "SELECT `reminder_text`, `reminder_time`, `reminder_requester` FROM `{$setMySQLTablePre}reminders` WHERE `reminder_target_nick`='{$target}'";
