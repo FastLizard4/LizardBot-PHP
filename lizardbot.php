@@ -56,7 +56,7 @@ echo $c_green;
 |_____||_______| |________||_|      |_| |_|   \__\ |____/
 
 PHP-LizardBot: IRC bot developed by FastLizard4 (who else?) and the LizardBot Development Team
-Version 7.0.0.3b (major.minor.build.revision) BETA
+Version 7.1.0.0b (major.minor.build.revision) BETA
 Licensed under the Creative Commons GNU General Public License 2.0 (GPL)
 For licensing details, contact me or read this page:
 http://creativecommons.org/licenses/GPL/2.0/
@@ -92,7 +92,7 @@ PandoraBot extension courtesy of Ttech (PHP-5 OOP)
 <?php
 //Check for updates
 echo "{$c_yellow}Checking for updates...\r\n";
-$version = "7.0.0.3b";
+$version = "7.1.0.0b";
 $upfp = @fopen('http://lizardwiki.dyndns.org/w/index.php?title=LizardBot/Latest&action=raw', 'r');
 $data = @fgets($upfp);
 @fclose($upfp);
@@ -157,9 +157,9 @@ class pandorabot {
         curl_setopt ($this->_Pipe, CURLOPT_POSTFIELDS, "Name=$name&input=$input");
         curl_setopt ($this->_Pipe, CURLOPT_FOLLOWLOCATION, 1);
         $reply = curl_exec($this->_Pipe);
-        if(isset($reply) && !preg_match("/^\s*$/", $reply)){
+        if(isset($reply) && !preg_match('/^\s*$/', $reply)){
             return $this->get_say($reply);
-        } elseif(!isset($reply) || preg_match("/^\s*$/", $reply)) {
+        } elseif(!isset($reply) || preg_match('/^\s*$/', $reply)) {
             return $this->default_response;
 	}
         curl_close($this->_Pipe);
@@ -186,7 +186,7 @@ class pandorabot {
 
     private function get_say($input, $tag='font'){
         // Do a little regex to get the bot reply
-        $pattern = "#<$tag color=\"\w+\">(.*?)</$tag>#";
+        $pattern = "#<$tag color=\"\\w+\">(.*?)</$tag>#";
         $var = preg_match($pattern, $input, $matches);
         $result = $this->sanitize($matches[1]); // Get outout and send for validation
         /* Simple Sanity Check  - Null */
@@ -414,34 +414,48 @@ if($setEnableMySQL) {
 	if($setMySQLTablePre) {
 		$setMySQLTablePre .= "_";
 	}
-	echo "Creating the MySQL-related functions....\r\n";
-	function dbConnect() {
-		global $setMySQLHost, $setMySQLPort, $setMySQLUserName, $setMySQLPassword, $setMySQLDB;
-		$mysql =  mysqli_connect($setMySQLHost, $setMySQLUserName, $setMySQLPassword, $setMySQLDB, $setMySQLPort) OR
-		print("{$c_red}Failed to connect to the MySQL server!  Details:\r\n" .
-		mysqli_connect_error() . "{$c_n}\r\n");
-		return $mysql;
-	}
-	function mkSane($mysql, $data) {
-		return trim(mysqli_real_escape_string($mysql, $data));
-	}
-	function dbQuery($mysql, $query, &$result) {
-	        $result = mysqli_query($mysql, $query);
-	        if(!$result) {
-	                echo "\r\nERROR: An error occured in the database query:\r\n";
-	                echo "\t" . $query . "\r\n";
-	                echo "MySQL returned the following error:\r\n";
-	                echo "\t" . mysqli_error($mysql) . "\r\n";
-	                return "An error occured in the MySQL database query.  Please check the console for details.";
-	        } else {
-	                return false;
-	        }
-	}
+}
+echo "Creating the MySQL-related functions....\r\n";
+if(!$setEnableMySQL) {
+	echo "You might be wondering why this is happening even though MySQL\r\n";
+	echo "is disabled.  The functions are being created so that you can\r\n";
+	echo "enable MySQL support while the bot is running without crashing\r\n";
+	echo "the bot.  However, before you try to do this (enable MySQL\r\n";
+	echo "support while the bot is running), make sure that you have read\r\n";
+	echo "the MySQL documentation on the wiki *COMPLETELY*, or bad stuff\r\n";
+	echo "*WILL* happen.\r\n";
+}
+function dbConnect() {
+	global $setMySQLHost, $setMySQLPort, $setMySQLUserName, $setMySQLPassword, $setMySQLDB;
+	$mysql =  mysqli_connect($setMySQLHost, $setMySQLUserName, $setMySQLPassword, $setMySQLDB, $setMySQLPort) OR
+	print("{$c_red}Failed to connect to the MySQL server!  Details:\r\n" .
+	mysqli_connect_error() . "{$c_n}\r\n");
+	return $mysql;
+}
+function mkSane($mysql, $data) {
+	return trim(mysqli_real_escape_string($mysql, $data));
+}
+function dbQuery($mysql, $query, &$result) {
+        $result = mysqli_query($mysql, $query);
+        if(!$result) {
+                echo "\r\nERROR: An error occured in the database query:\r\n";
+                echo "\t" . $query . "\r\n";
+                echo "MySQL returned the following error:\r\n";
+                echo "\t" . mysqli_error($mysql) . "\r\n";
+                return "An error occured in the MySQL database query.  Please check the console for details.";
+        } else {
+                return false;
+        }
+}
+if($setEnableMySQL) {
 	echo "Verifying connection to MySQL database....";
 	$mysql = dbConnect();
 	if(!mysql) {die();}
 	mysqli_close($mysql);
 	echo "{$_green}    done!{$c_n}\r\n";
+}
+if(!$setBitlyAPISleep || !is_int($setBitlyAPISleep)) {
+	$setBitlyAPISleep = 30;
 }
 if(!$timezone) {
 	echo <<<EOD
@@ -518,7 +532,7 @@ EOD;
 echo <<<EOD
 {$c_bold}Now checking validity of the nickname using standard regex tests...\r\n
 EOD;
-if(!preg_match("/^([A-Za-z_\[\]\|])([\w-\[\]\^\|`])*$/", $nick)) {
+if(!preg_match('/^([A-Za-z_\[\]\|])([\w-\[\]\^\|`])*$/', $nick)) {
 	echo <<<EOD
 {$c_n}{$c_red}The regex does not match the nick, meaning that the IRC daemon of the server
 you are attempting to connect to would likely reject your registration signal.
@@ -1180,9 +1194,7 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
 		$dataai = explode(" :", $data);
 //		echo "dataai: " . $dataai[2] . "\r\n";
 //		echo "dataai1: " . $dataai[1] . "\r\n";
-		$patterns = array("/\|/", "/\[/", "/\]/");
-		$replacements = array("\|", "\[", "\]");
-		$nicksan = preg_replace($patterns, $replacements, $nick);
+		$nicksan = preg_quote($nick, '/');
 		$regex = "/^";
 		$regex .= $nicksan;
 		$regex .= "(: |, | - ).*$/i";
@@ -1196,7 +1208,7 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
 			$ai->set_timeout(180); // 60 should be fine
 			$rofl = $ai->say($msg); // This is what you want to get back to the user. 
 			$aicount++;
-			if(!$rofl || preg_match("/^\s*$/", $rofl)) { $rofl = $ai->default_response; }
+			if(!$rofl || preg_match('/^\s*$/', $rofl)) { $rofl = $ai->default_response; }
 	                $target = explode("!", $d[0]);
         	        $e = $target[0] . ": ";
 			sleep(2);
@@ -1247,7 +1259,7 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
 		$data = NULL;
 		$tinyurl = trim($rdata);
 //		$tinyurl = urlencode($tinyurl);
-		if(!preg_match("#^(http|https)://.*$#i", $tinyurl)) {
+		if(!preg_match('#^(http|https)://.*$#i', $tinyurl)) {
 			$data = "Invalid URL.";
 		} else {
 			$tinyfp = fopen("http://tinyurl.com/api-create.php?url={$tinyurl}","r") OR $data = "Error in connection to TinyURL API.";
@@ -1305,7 +1317,7 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
 	if($d[3] == "{$setTrigger}update" && hasPriv('*')) {
 		$cmdcount++;
 		echo "Checking for updates...\r\n";
-		$version = "7.0.0.3b";
+		$version = "7.1.0.0b";
 		$upfp = @fopen('http://lizardwiki.dyndns.org/w/index.php?title=LizardBot/Latest&action=raw', 'r');
 		$data = @fgets($upfp);
 		@fclose($upfp);
@@ -1705,6 +1717,190 @@ STDOUT;
 		echo "-!- PRIVMSG $c :" . $e . $data . "\r\n";
 		fclose($tinyurl);
 	}
+	if($d[3] == "{$setTrigger}bit.ly" && hasPriv('bit.ly') && $setEnableBitly && $setBitlyLogin && $setBitlyAPIKey) {
+		/* Right then.  Here lies the code that allows bit.ly (another URL shortener
+		** interaction.  I'm going to try to actually document the code, since it will
+		** be unusually complex.  It will use cURL and bit.ly's API, version 3.  So, if you're
+		** ready for your brain to be exploded, read on!
+		*/
+		// First thing is that the bit.ly API is rate limited.  So, we'll prevent the bot from 
+		// making an API request too often by noting the time of each request.  This will be
+		// user configurable.
+		$bitlyThisRequestTime = time();
+		if($bitlyThisRequestTime - $bitlyLastRequestTime < $setBitlyAPISleep) { //We've exceeded the bot-based ratelimit, so abort.
+			$data = "Rate limit exceeded.  Please wait a few seconds, or contact the bot's operator to get the limit raised.";
+		} else { // Ratelimit OK, proceed
+			$bitlyLastRequestTime = $bitlyThisRequestTime;
+			// Many of the cURL options (i.e., curl_setopt()) are going to be common across all possible API queries, so we're
+			// going to go ahead and start "building" the query
+			$apiPipe = curl_init();
+			$apiPipeSetoptSuccess = curl_setopt_array($apiPipe, array( // Begin setting cURL Options
+				CURLOPT_AUTOREFERER    => TRUE          ,
+				CURLOPT_VERBOSE        => TRUE          , // So, if necessary, bot operators can read debugging stuff from STDERR
+				CURLOPT_CONNECTTIMEOUT => 20            , // 20 seconds for a timeout seems reasonable enough.  Lower might be better, though
+				CURLOPT_PORT           => 80            ,
+//				CURLOPT_PROTOCOLS      => CURLPROTO_HTTP,
+				CURLOPT_TIMEOUT        => 30            , // 30 seconds is the maximum amount of time we want to wait for this to work
+				CURLOPT_RETURNTRANSFER => TRUE          , // I would like my data back, kthx
+				CURLOPT_USERAGENT      => "PHP-LizardBot/7.1.0.0b (compatible; +http://lizardwiki.dyndns.org/wiki/LizardBot)" //Set our useragent
+				));
+			if(!$apiPipeSetoptSuccess) { // Uhoh, it looks like that, for some reason, configuration of the pipe failed.
+				$data = "For some reason, curl_setopt_array() configuration failed.  Perhaps you're running an obsolete version of PHP-cURL?  Or perhaps your version of PHP is outdated?";
+			} else { // Configuration worked, so we're free to continue.
+				// First, we set the URL base for all API queries.
+				$apiPipeURLBase = 'http://api.bit.ly/v3/';
+				// Now, we need to figure out what query we need to run.
+				if($d[4] == "shorten") { // User wants to shorten a link
+					if(!$d[5]) {
+						$data = "A required parameter, the URL to shorten, was not provided.  Syntax: @bit.ly shorten URLtoShorten";
+					} else {
+						$apiPipeRequestURL = $apiPipeURLBase . "shorten?format=json&domain=bit.ly&login={$setBitlyLogin}&apiKey={$setBitlyAPIKey}&";
+						// Now we need to handle the long URL that needs to be shortened.  It must be URL encoded.
+						$apiPipeRequestLongUrlE = explode('shorten', $data);
+						$apiPipeRequestLongUrl = rawurlencode(trim($apiPipeRequestLongUrlE[1]));
+						$apiPipeRequestURL .= "longUrl={$apiPipeRequestLongUrl}";
+						curl_setopt($apiPipe, CURLOPT_URL, $apiPipeRequestURL); //Set the URL to be exec'd
+						$apiPipeReturn = curl_exec($apiPipe); // GO!
+						$apiPipeOut = json_decode($apiPipeReturn, TRUE); // So we can like do stuff with the data we get back
+						if($apiPipeOut['status_code'] != 200) { // Whoops, we can has problem
+							$data = "Hmm, something went wrong when I tried to shorten your URL.  Here's what I got back from the API: ERROR {$apiPipeOut['status_code']}: {$apiPipeOut['status_txt']}.";
+						} else { // Looks like everything ran correctly, so proceed
+							if($apiPipeOut['data']['new_hash']) {
+								$newHash = "Yes.";
+							} else {
+								$newHash = "No.";
+							}
+						$data = "Shortened URL: {$apiPipeOut['data']['url']} - Is this the first time the long URL you entered was shortened? {$newHash}";
+						}
+					}
+				} elseif($d[4] == "expand") { // User wants to expand
+					if(!$d[5]) {
+						$data = "A required parameter, the (full) URL to expand, was not found.  Syntax: @bit.ly expand bit.lyURL";
+					} else {
+						//This is pretty much a reuse of the shorten code
+						$apiPipeRequestURL = $apiPipeURLBase . "expand?format=json&login={$setBitlyLogin}&apiKey={$setBitlyAPIKey}&";
+						$apiPipeRequestLongUrlE = explode('expand', $data);
+						$apiPipeRequestLongUrl = rawurlencode(trim($apiPipeRequestLongUrlE[1]));
+						$apiPipeRequestURL .= "shortUrl={$apiPipeRequestLongUrl}";
+						curl_setopt($apiPipe, CURLOPT_URL, $apiPipeRequestURL); //Set the URL to be exec'd
+						$apiPipeReturn = curl_exec($apiPipe); // GO!
+						$apiPipeOut = json_decode($apiPipeReturn, TRUE); // So we can like do stuff with the data we get back
+						if($apiPipeOut['status_code'] != 200) { // Whoops, we can has problem
+							$data = "Hmm, something went wrong when I tried to expand your bit.ly URL.  Here's what I got back from the API: ERROR {$apiPipeOut['status_code']}: {$apiPipeOut['status_txt']}.";
+						} else { // Looks like everything ran correctly, so proceed
+							if($apiPipeOut['data']['expand'][0]['error']) {
+								$data = "The API returned an error for your short URL.  Here it is: {$apiPipeOut['data']['expand'][0]['error']}.";
+							} else {
+								$data = "For the short URL {$apiPipeOut['data']['expand'][0]['short_url']}, the corresponding long URL is: {$apiPipeOut['data']['expand'][0]['long_url']}";
+							}
+						}
+					}
+				} elseif($d[4] == "clicks") { // User wants to get clicks for an already existing URL
+					if(!$d[5]) {
+						$data = "A required parameter, the bit.ly URL to get click data for, was not found.  Syntax: @bit.ly clicks bit.lyURL";
+					} else {
+						//This is pretty much a reuse of the expand code
+						$apiPipeRequestURL = $apiPipeURLBase . "clicks?format=json&login={$setBitlyLogin}&apiKey={$setBitlyAPIKey}&";
+						$apiPipeRequestLongUrlE = explode('clicks', $data);
+						$apiPipeRequestLongUrl = rawurlencode(trim($apiPipeRequestLongUrlE[1]));
+						$apiPipeRequestURL .= "shortUrl={$apiPipeRequestLongUrl}";
+						curl_setopt($apiPipe, CURLOPT_URL, $apiPipeRequestURL); //Set the URL to be exec'd
+						$apiPipeReturn = curl_exec($apiPipe); // GO!
+						$apiPipeOut = json_decode($apiPipeReturn, TRUE); // So we can like do stuff with the data we get back
+						if($apiPipeOut['status_code'] != 200) { // Whoops, we can has problem
+							$data = "Hmm, something went wrong when I tried to expand your bit.ly URL.  Here's what I got back from the API: ERROR {$apiPipeOut['status_code']}: {$apiPipeOut['status_txt']}.";
+						} else { // Looks like everything ran correctly, so proceed
+							if($apiPipeOut['data']['clicks'][0]['error']) {
+								$data = "The API returned an error for your short URL.  Here it is: {$apiPipeOut['data']['clicks'][0]['error']}.";
+							} else {
+								$data = "For the short URL {$apiPipeOut['data']['clicks'][0]['short_url']}, the number of user clicks (for {$setBitlyLogin}'s URL) is {$apiPipeOut['data']['clicks'][0]['user_clicks']} and the number of global clicks is {$apiPipeOut['data']['clicks'][0]['global_clicks']}.";
+							}
+						}
+					}
+				} elseif($d[4] == "checkpro") { // User wants to see if a domain is a bit.ly pro domain
+					if(!$d[5]) {
+						$data = "A required parameter, the domain to check, was not found.  Syntax: @bit.ly checkpro domainToCheck";
+					} else {
+						//This is pretty much a reuse of the expand code
+						$apiPipeRequestURL = $apiPipeURLBase . "bitly_pro_domain?format=json&login={$setBitlyLogin}&apiKey={$setBitlyAPIKey}&";
+						$apiPipeRequestLongUrlE = explode('checkpro', $data);
+						$apiPipeRequestLongUrl = rawurlencode(trim($apiPipeRequestLongUrlE[1]));
+						$apiPipeRequestURL .= "domain={$apiPipeRequestLongUrl}";
+						curl_setopt($apiPipe, CURLOPT_URL, $apiPipeRequestURL); //Set the URL to be exec'd
+						$apiPipeReturn = curl_exec($apiPipe); // GO!
+						$apiPipeOut = json_decode($apiPipeReturn, TRUE); // So we can like do stuff with the data we get back
+						if($apiPipeOut['status_code'] != 200) { // Whoops, we can has problem
+							$data = "Hmm, something went wrong when I tried to expand your bit.ly URL.  Here's what I got back from the API: ERROR {$apiPipeOut['status_code']}: {$apiPipeOut['status_txt']}.";
+						} else { // Looks like everything ran correctly, so proceed
+							if($apiPipeOut['data']['bitly_pro_domain']) {
+								$data = "The domain you entered, {$apiPipeOut['data']['domain']}, IS a bitly pro domain.";
+							} else {
+								$data = "The domain you entered, {$apiPipeOut['data']['domain']}, IS NOT a bitly pro domain.";
+							}
+						}
+					}
+				} elseif($d[4] == "lookup") { // User wants to lookup an already existing bit.ly link for a long URL
+					if(!$d[5]) {
+						$data = "A required parameter, the long URL to check, was not found.  Syntax: @bit.ly lookup longURL";
+					} else {
+						//This is pretty much a reuse of the expand code
+						$apiPipeRequestURL = $apiPipeURLBase . "lookup?format=json&login={$setBitlyLogin}&apiKey={$setBitlyAPIKey}&";
+						$apiPipeRequestLongUrlE = explode('lookup', $data);
+						$apiPipeRequestLongUrl = rawurlencode(trim($apiPipeRequestLongUrlE[1]));
+						$apiPipeRequestURL .= "url={$apiPipeRequestLongUrl}";
+						curl_setopt($apiPipe, CURLOPT_URL, $apiPipeRequestURL); //Set the URL to be exec'd
+						$apiPipeReturn = curl_exec($apiPipe); // GO!
+						$apiPipeOut = json_decode($apiPipeReturn, TRUE); // So we can like do stuff with the data we get back
+						if($apiPipeOut['status_code'] != 200) { // Whoops, we can has problem
+							$data = "Hmm, something went wrong when I tried to expand your bit.ly URL.  Here's what I got back from the API: ERROR {$apiPipeOut['status_code']}: {$apiPipeOut['status_txt']}.";
+						} else { // Looks like everything ran correctly, so proceed
+							if($apiPipeOut['data']['lookup'][0]['error']) {
+								$data = "The API returned an error for your long URL.  Here it is: {$apiPipeOut['data']['lookup'][0]['error']}.  If this is NOT_FOUND, it means that no bit.ly URL yet exists for the long URL you entered.";
+							} else {
+								$data = "For the long URL {$apiPipeOut['data']['lookup'][0]['url']}, the following bit.ly short URL already exists: {$apiPipeOut['data']['lookup'][0]['short_url']}";
+							}
+						}
+					}
+				} elseif($d[4] == "info") { // User wants to get info
+					if(!$d[5]) {
+						$data = "A required parameter, the bit.ly URL to get info for, was not found.  Syntax: @bit.ly info bit.lyURL";
+					} else {
+						//This is pretty much a reuse of the shorten code
+						$apiPipeRequestURL = $apiPipeURLBase . "info?format=json&login={$setBitlyLogin}&apiKey={$setBitlyAPIKey}&";
+						$apiPipeRequestLongUrlE = explode('info', $data);
+						$apiPipeRequestLongUrl = rawurlencode(trim($apiPipeRequestLongUrlE[1]));
+						$apiPipeRequestURL .= "shortUrl={$apiPipeRequestLongUrl}";
+						curl_setopt($apiPipe, CURLOPT_URL, $apiPipeRequestURL); //Set the URL to be exec'd
+						$apiPipeReturn = curl_exec($apiPipe); // GO!
+						$apiPipeOut = json_decode($apiPipeReturn, TRUE); // So we can like do stuff with the data we get back
+						if($apiPipeOut['status_code'] != 200) { // Whoops, we can has problem
+							$data = "Hmm, something went wrong when I tried to expand your bit.ly URL.  Here's what I got back from the API: ERROR {$apiPipeOut['status_code']}: {$apiPipeOut['status_txt']}.";
+						} else { // Looks like everything ran correctly, so proceed
+							if($apiPipeOut['data']['info'][0]['error']) {
+								$data = "The API returned an error for your short URL.  Here it is: {$apiPipeOut['data']['info'][0]['error']}.";
+							} else {
+								$data = "For the short URL {$apiPipeOut['data']['info'][0]['short_url']}, the page title is: \"{$apiPipeOut['data']['info'][0]['title']}\" and the bit.ly URL was created by the bit.ly user \"{$apiPipeOut['data']['info'][0]['created_by']}\".";
+							}
+						}
+					}
+				} else {
+					$data = "A required parameter, the action, was not provided.  Syntax: @bit.ly action [otherArguments]";
+				}
+			}
+		}
+		curl_close($apiPipe); //End the cURL session
+		$target = explode("!", $d[0]);
+		$e = $target[0] . ": ";
+		if($d[2] == $nick) {
+			$target = explode("!", $d[0]);
+			$c = $target[0];
+			$e = NULL;
+		} else {
+			$c = $d[2];
+		}
+		fwrite($ircc, "PRIVMSG $c :" . $e . $data . "\r\n");
+		echo "-!- PRIVMSG $c :" . $e . $data . "\r\n";
+	}
 	if($d[3] == "{$setTrigger}fish" && hasPriv('*')) {
 		$cmdcount++;
 		if($setEnableFishbot) {
@@ -1906,7 +2102,7 @@ STDOUT;
 					}
 				} */
 				foreach($fishAresponses as $regex2 => $mtpl) {
-					$regex = str_replace('%f', $nick, $regex2);
+					$regex = str_replace('%f', preg_quote($nick, '/'), $regex2);
 					if(preg_match($regex,$toProcess,$m) && !$stop) {
 						$data = str_replace(array('%n','%c','%1'),array($e,$c,$m[1]),$mtpl);
 						$stop = TRUE;
@@ -1923,7 +2119,7 @@ STDOUT;
 					}
 				}*/
 				foreach($fishCresponses as $regex2 => $mtpl) {
-					$regex = str_replace('%f', $nick, $regex2);
+					$regex = str_replace('%f', preg_quote($nick, '/'), $regex2);
 					if(preg_match($regex,$fishdata,$m) && !$stop) {
 						$data = str_replace(array('%n','%c','%1'),array($e,$c,$m[1]),$mtpl);
 						$stop = TRUE;

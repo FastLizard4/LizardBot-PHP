@@ -1,4 +1,4 @@
-<?php
+\<?php
 /***************************************
 LizardBot configuration file
 ****************************************
@@ -107,6 +107,24 @@ $setEnableAllTriggerHelp: Whether or not to enable a special help command that r
 
      $setEnableReminders: Whether or not to enable the @remind command.  Boolean, TRUE by default.  REQUIRES MYSQL
                           TO BE ENABLED!
+
+  $setEnableBitly: Set this boolean variable to TRUE if you want to enable support for bit.ly URL shortening and
+                   other functions.  WARNING: YOU MUST HAVE THE CURL EXTENSION INSTALLED FOR THIS TO WORK!
+                   *DO NOT SET THIS TO TRUE* if you do not have CURL installed, as it will just cause the bot to crash!
+                   Set this to TRUE to enable, FALSE to disable bit.ly support.  The default value for this is FALSE,
+                   since, strangely, the default PHP package on many systems /does not/ include PHP-cURL.
+$setBitlyAPISleep: The time you want to wait (in seconds) before allowing more use of the @bit.ly command.  I.e.,
+                   this is a bot-based rate limit so we don't trip the rate limit over at bit.ly's API.  Variable accepts
+                   an integer, default 30.
+   $setBitlyLogin: Your API Login username for bit.ly.  You need one of these to use the API!  All you need is a bit.ly account
+                   to get this (and the API key for the next step).  If you don't provide a login, bit.ly functions will not work.
+                   Required for @bit.ly command, expects a string.  Must be set with $setBitlyAPIKey!
+  $setBitlyAPIKey: Your API key for bit.ly.  You need a bit.ly account to use the API!  It's free, and it comes with a key.
+                   If you don't provide this, bit.ly functions will not work.  Required for @bit.ly command, expects a string.
+                   Must be set with $setBitlyLogin!
+                   ** NOTE ABOUT THE ABOVE TWO CONFIGURATION VARIABLES: You can get your API Login and Key (assuming that
+                   you have a bit.ly account) here: http://bit.ly/a/your_api_key.  If you don't have an account, you'll need
+                   to create one to use the bit.ly functions.
  
 [AUTOCONNECT BLOCK]
 This optional block, when configured, allows the bot to immeidately automatically connect to a network
@@ -175,6 +193,7 @@ $privgroups[ '*'         ][ 'nyse'        ] = 1;
 $privgroups[ '*'         ][ 'fantasy'     ] = 1;
 $privgroups[ '*'         ][ 'insult'      ] = 1;
 $privgroups[ '*'         ][ 'tinyurl'     ] = 1;
+$privgroups[ '*'         ][ 'bit.ly'      ] = 1;
 $privgroups[ '*'         ][ 'fish'        ] = 1;
 $pvivgroups[ '*'         ][ 'remind'      ] = 1;
 
@@ -267,6 +286,11 @@ $setEnableFishbot = FALSE;
 $setEnableAllTriggerHelp = TRUE;
 
 $setEnableReminders = TRUE;
+
+  $setEnableBitly = FALSE;
+$setBitlyAPISleep = 30;
+   $setBitlyLogin = '';
+  $setBitlyAPIKey = '';
 
 #################################################
 #                   AUTOCONNECT                 #
