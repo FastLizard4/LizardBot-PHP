@@ -56,7 +56,7 @@ echo $c_green;
 |_____||_______| |________||_|      |_| |_|   \__\ |____/
 
 PHP-LizardBot: IRC bot developed by FastLizard4 (who else?) and the LizardBot Development Team
-Version 7.1.0.0b (major.minor.build.revision) BETA
+Version 7.1.1.0b (major.minor.build.revision) BETA
 Licensed under the Creative Commons GNU General Public License 2.0 (GPL)
 For licensing details, contact me or read this page:
 http://creativecommons.org/licenses/GPL/2.0/
@@ -92,7 +92,7 @@ PandoraBot extension courtesy of Ttech (PHP-5 OOP)
 <?php
 //Check for updates
 echo "{$c_yellow}Checking for updates...\r\n";
-$version = "7.1.0.0b";
+$version = "7.1.1.0b";
 $upfp = @fopen('http://lizardwiki.dyndns.org/w/index.php?title=LizardBot/Latest&action=raw', 'r');
 $data = @fgets($upfp);
 @fclose($upfp);
@@ -1317,7 +1317,7 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
 	if($d[3] == "{$setTrigger}update" && hasPriv('*')) {
 		$cmdcount++;
 		echo "Checking for updates...\r\n";
-		$version = "7.1.0.0b";
+		$version = "7.1.1.0b";
 		$upfp = @fopen('http://lizardwiki.dyndns.org/w/index.php?title=LizardBot/Latest&action=raw', 'r');
 		$data = @fgets($upfp);
 		@fclose($upfp);
@@ -1742,7 +1742,7 @@ STDOUT;
 //				CURLOPT_PROTOCOLS      => CURLPROTO_HTTP,
 				CURLOPT_TIMEOUT        => 30            , // 30 seconds is the maximum amount of time we want to wait for this to work
 				CURLOPT_RETURNTRANSFER => TRUE          , // I would like my data back, kthx
-				CURLOPT_USERAGENT      => "PHP-LizardBot/7.1.0.0b (compatible; +http://lizardwiki.dyndns.org/wiki/LizardBot)" //Set our useragent
+				CURLOPT_USERAGENT      => "PHP-LizardBot/7.1.1.0b (compatible; +http://lizardwiki.dyndns.org/wiki/LizardBot)" //Set our useragent
 				));
 			if(!$apiPipeSetoptSuccess) { // Uhoh, it looks like that, for some reason, configuration of the pipe failed.
 				$data = "For some reason, curl_setopt_array() configuration failed.  Perhaps you're running an obsolete version of PHP-cURL?  Or perhaps your version of PHP is outdated?";
@@ -1813,7 +1813,11 @@ STDOUT;
 							if($apiPipeOut['data']['clicks'][0]['error']) {
 								$data = "The API returned an error for your short URL.  Here it is: {$apiPipeOut['data']['clicks'][0]['error']}.";
 							} else {
-								$data = "For the short URL {$apiPipeOut['data']['clicks'][0]['short_url']}, the number of user clicks (for {$setBitlyLogin}'s URL) is {$apiPipeOut['data']['clicks'][0]['user_clicks']} and the number of global clicks is {$apiPipeOut['data']['clicks'][0]['global_clicks']}.";
+								if($apiPipeOut['data']['clicks'][0]['global_clicks'] == $apiPipeOut['data']['clicks'][0]['user_clicks'] &&  $apiPipeOut['data']['clicks'][0]['user_clicks'] != 0) {
+									$data = "For the short URL {$apiPipeOut['data']['clicks'][0]['short_url']}, which is an \"aggregate\" or \"global\" bit.ly URL, there have been {$apiPipeOut['data']['clicks'][0]['global_clicks']} clicks.";
+								} else {
+									$data = "For the short URL {$apiPipeOut['data']['clicks'][0]['short_url']}, the number of clicks is {$apiPipeOut['data']['clicks'][0]['user_clicks']} and the number of global clicks on the aggregate (global) bit.ly URL is {$apiPipeOut['data']['clicks'][0]['global_clicks']}.";
+								}
 							}
 						}
 					}
@@ -1879,7 +1883,11 @@ STDOUT;
 							if($apiPipeOut['data']['info'][0]['error']) {
 								$data = "The API returned an error for your short URL.  Here it is: {$apiPipeOut['data']['info'][0]['error']}.";
 							} else {
-								$data = "For the short URL {$apiPipeOut['data']['info'][0]['short_url']}, the page title is: \"{$apiPipeOut['data']['info'][0]['title']}\" and the bit.ly URL was created by the bit.ly user \"{$apiPipeOut['data']['info'][0]['created_by']}\".";
+								if($apiPipeOut['data']['info'][0]['created_by'] == "bitly") {
+									$data = "For the short URL {$apiPipeOut['data']['info'][0]['short_url']}, the page title is: \"{$apiPipeOut['data']['info'][0]['title']}\".  The bit.ly URL is an aggregate URL.";
+								} else {
+									$data = "For the short URL {$apiPipeOut['data']['info'][0]['short_url']}, the page title is: \"{$apiPipeOut['data']['info'][0]['title']}\" and the bit.ly URL was created by the bit.ly user \"{$apiPipeOut['data']['info'][0]['created_by']}\".";
+								}
 							}
 						}
 					}
@@ -2014,7 +2022,12 @@ STDOUT;
 		                                }
 		                                mysqli_free_result($result);
 		                        }
-					$data .= "OK, I'll tell them the next time I see them talk in a channel I'm in.";
+					if($setRemindOnJoin) {
+						$orJoin = "or join ";
+					} else {
+						unset($orJoin);
+					}
+					$data .= "OK, I'll tell them the next time I see them talk in {$orJoin}a channel I'm in.";
 				}
 				unset($result);
 				mysqli_close($mysql);
@@ -2023,7 +2036,7 @@ STDOUT;
 	                echo "-!- PRIVMSG $c :" . $e . $data . "\r\n";
 		}
 		//Code to allow retrieval of reminders, ignoring PMs to the bot
-		if($d[1] == "PRIVMSG" && $d[2] != $nick) {
+		if(($d[1] == "PRIVMSG" || ($d[1] == "JOIN" && $setRemindOnJoin)) && $d[2] != $nick) {
 			$success = false;
 			$t = explode('!', $d[0]);
 			$userNick = $t[0];

@@ -107,6 +107,8 @@ $setEnableAllTriggerHelp: Whether or not to enable a special help command that r
 
      $setEnableReminders: Whether or not to enable the @remind command.  Boolean, TRUE by default.  REQUIRES MYSQL
                           TO BE ENABLED!
+        $setRemindOnJoin: If this boolean variable is set to TRUE, the bot will also deliver reminders to people when
+                          it sees them join a channel the bot is in, not just when they talk in one.  FALSE by default.
 
   $setEnableBitly: Set this boolean variable to TRUE if you want to enable support for bit.ly URL shortening and
                    other functions.  WARNING: YOU MUST HAVE THE CURL EXTENSION INSTALLED FOR THIS TO WORK!
@@ -286,6 +288,7 @@ $setEnableFishbot = FALSE;
 $setEnableAllTriggerHelp = TRUE;
 
 $setEnableReminders = TRUE;
+   $setRemindOnJoin = FALSE;
 
   $setEnableBitly = FALSE;
 $setBitlyAPISleep = 30;
