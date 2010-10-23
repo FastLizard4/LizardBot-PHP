@@ -56,7 +56,7 @@ echo $c_green;
 |_____||_______| |________||_|      |_| |_|   \__\ |____/
 
 PHP-LizardBot: IRC bot developed by FastLizard4 (who else?) and the LizardBot Development Team
-Version 7.1.1.0b (major.minor.build.revision) BETA
+Version 7.2.0.0b (major.minor.build.revision) BETA
 Licensed under the Creative Commons GNU General Public License 2.0 (GPL)
 For licensing details, contact me or read this page:
 http://creativecommons.org/licenses/GPL/2.0/
@@ -92,7 +92,7 @@ PandoraBot extension courtesy of Ttech (PHP-5 OOP)
 <?php
 //Check for updates
 echo "{$c_yellow}Checking for updates...\r\n";
-$version = "7.1.1.0b";
+$version = "7.2.0.0b";
 $upfp = @fopen('http://lizardwiki.dyndns.org/w/index.php?title=LizardBot/Latest&action=raw', 'r');
 $data = @fgets($upfp);
 @fclose($upfp);
@@ -713,6 +713,10 @@ IRCO;
 }
 echo "Waiting 5 seconds to make sure we're all good to begin the sync process...\r\n";
 sleep(5);
+if($setAutoModes) {
+	echo "Now setting usermode(s) +{$setAutoModes} on myself...\r\n";
+	fwrite($fp[$n], "MODE {$nick} +{$setAutoModes}\r\n");
+}
 echo <<<CONSOLEOUTPUT
 \n{$c_ul}Please enter a comma-delimited list of channels to join: 
 CONSOLEOUTPUT;
@@ -1317,7 +1321,7 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
 	if($d[3] == "{$setTrigger}update" && hasPriv('*')) {
 		$cmdcount++;
 		echo "Checking for updates...\r\n";
-		$version = "7.1.1.0b";
+		$version = "7.2.0.0b";
 		$upfp = @fopen('http://lizardwiki.dyndns.org/w/index.php?title=LizardBot/Latest&action=raw', 'r');
 		$data = @fgets($upfp);
 		@fclose($upfp);
@@ -1512,7 +1516,7 @@ STDOUT;
 		}
 		fclose($google);
 		unset($google);
-		if(!stristr($googleOut, '<img src=/images/calc_img.gif width=40 height=30 alt="">')) {
+		if(!stristr($googleOut, '<img src="/images/icons/onebox/calculator-40.gif" width=40 height=40 alt="">')) {
 			$data = "Error: An invalid calculation was specified.";
 			$stopExecution = TRUE;
 		}
@@ -1742,7 +1746,7 @@ STDOUT;
 //				CURLOPT_PROTOCOLS      => CURLPROTO_HTTP,
 				CURLOPT_TIMEOUT        => 30            , // 30 seconds is the maximum amount of time we want to wait for this to work
 				CURLOPT_RETURNTRANSFER => TRUE          , // I would like my data back, kthx
-				CURLOPT_USERAGENT      => "PHP-LizardBot/7.1.1.0b (compatible; +http://lizardwiki.dyndns.org/wiki/LizardBot)" //Set our useragent
+				CURLOPT_USERAGENT      => "PHP-LizardBot/7.2.0.0b (compatible; +http://lizardwiki.dyndns.org/wiki/LizardBot)" //Set our useragent
 				));
 			if(!$apiPipeSetoptSuccess) { // Uhoh, it looks like that, for some reason, configuration of the pipe failed.
 				$data = "For some reason, curl_setopt_array() configuration failed.  Perhaps you're running an obsolete version of PHP-cURL?  Or perhaps your version of PHP is outdated?";

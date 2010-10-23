@@ -50,6 +50,14 @@ YOUR TIMEZONE IS ALREADY DEFINED IN YOUR PHP CONFIGURATION FILE.
          $setGecos: Set the bot's gecos, or real name.  String.  Default: bot
          $setIdent: Set the bot's username if no ident reply is sent.  String. Default: bot
        $setTrigger: Set the bot's command trigger.  String.  Default is '@'
+     $setAutoModes: Sets the usermodes the bot should set on itself upon connecting to an IRC network.  Default null,
+                    accepts a string of characters.  Do not include the leading + in front of the mode characters.
+                    Examples of valid settings here: "B" to set mode +B, "iBw" to set modes +i, +B, and +w, "xiBw" to
+                    set modes +x, +i, +B, and +w, etc.
+                    NOTE: You can /unset/ modes at startup by preceeding the modes to be unset with a "-".  For example,
+                    setting $setAutoModes to "B-w" would set mode +B and unset mode +w, "-Bw" would unset both +B and +w,
+                    (while setting no other modes) and "Bw-ix" would set modes +B and +w and unset modes +i and +x.
+                    Note that modes to be unset must always follow the modes to be set.
 
 ##Services Configuration
     $setNSPassword: The default NickServ password
@@ -232,9 +240,10 @@ $setIsOnWindows = FALSE;
 #                    RECOMMENDED                #
 #                       BLOCK                   #
 #################################################
-  $setIdent = "LizardBot";
-  $setGecos = "PHP-LizardBot v{$version} - http://lizardwiki.dyndns.org/wiki/LizardBot";
-$setTrigger = "@";
+    $setIdent = "LizardBot";
+    $setGecos = "PHP-LizardBot v{$version} - http://lizardwiki.dyndns.org/wiki/LizardBot";
+  $setTrigger = "@";
+$setAutoModes = ""; //Remember that some IRC networks require bots to have usermode +B!  If it is required, set it here.
 
 #################################################
 #                    IDIOT LINE                 #
