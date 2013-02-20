@@ -55,15 +55,15 @@ echo $c_green;
 | |___  __| |__   ___/ /__ | |______| | | |  \  \  | |_| |
 |_____||_______| |________||_|      |_| |_|   \__\ |____/
 
-PHP-LizardBot: IRC bot developed by FastLizard4 (who else?) and the LizardBot Development Team
-Version 7.2.0.0b (major.minor.build.revision) BETA
+LizardBot for PHP: IRC bot developed by FastLizard4 (who else?) and the LizardBot Development Team
+Version 7.2.1.0b (major.minor.build.revision) BETA
 Licensed under the Creative Commons GNU General Public License 2.0 (GPL)
 For licensing details, contact me or read this page:
 http://creativecommons.org/licenses/GPL/2.0/
 REPORT BUGS AND SUGGESTIONS TO BUGZILLA (http://scalar.cluenet.org/bugzilla)
 
 LICENSING DETAILS:
-PHP-LizardBot (IRC bot) written by FastLizard4 and the LizardBot Development Team
+LizardBot for PHP (IRC bot) written by FastLizard4 and the LizardBot Development Team
 Copyright (C) 2008-2010 FastLizard4 and the LizardBot Development Team
 
 This program is free software; you can redistribute it and/or
@@ -92,8 +92,8 @@ PandoraBot extension courtesy of Ttech (PHP-5 OOP)
 <?php
 //Check for updates
 echo "{$c_yellow}Checking for updates...\r\n";
-$version = "7.2.0.0b";
-$upfp = @fopen('http://lizardwiki.dyndns.org/w/index.php?title=LizardBot/Latest&action=raw', 'r');
+$version = "7.2.1.0b";
+$upfp = @fopen('http://fastlizard4.org/w/index.php?title=LizardBot/Latest&action=raw', 'r');
 $data = @fgets($upfp);
 @fclose($upfp);
 if(!$data) {
@@ -1081,7 +1081,7 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
 		sleep(1);
 		fwrite($ircc, "PRIVMSG $c :$target2: Extensions: Pandorabot by Ttech (PHP-5-OOP)\r\n");
 		sleep(2);*/
-		fwrite($ircc, "PRIVMSG $c :$target2: For help and copyrights, see http://lizardwiki.dyndns.org/wiki/LizardBot\r\n");
+		fwrite($ircc, "PRIVMSG $c :$target2: For help and copyrights, see http://fastlizard4.org/wiki/LizardBot\r\n");
 		echo "
 -!- $target2 requested {$setTrigger}info\n
 ";
@@ -1094,7 +1094,7 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
                         $c = $target2[0];
                 }
 		fwrite($ircc, "PRIVMSG $c :$target2: You have triggered my general help command by using a \"standard\" bot trigger that is not my normal trigger.  For your reference, my normal trigger (which you must use for triggering all my commands) is {$setTrigger}\r\n");
-                fwrite($ircc, "PRIVMSG $c :$target2: For help and copyrights, see http://lizardwiki.dyndns.org/wiki/LizardBot\r\n");
+                fwrite($ircc, "PRIVMSG $c :$target2: For help and copyrights, see http://fastlizard4.org/wiki/LizardBot\r\n");
 	}
 	if($d[3] == "{$setTrigger}nyse" && hasPriv('nyse')) {
 		$cmdcount++;
@@ -1321,8 +1321,8 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
 	if($d[3] == "{$setTrigger}update" && hasPriv('*')) {
 		$cmdcount++;
 		echo "Checking for updates...\r\n";
-		$version = "7.2.0.0b";
-		$upfp = @fopen('http://lizardwiki.dyndns.org/w/index.php?title=LizardBot/Latest&action=raw', 'r');
+		$version = "7.2.1.0b";
+		$upfp = @fopen('http://fastlizard4.org/w/index.php?title=LizardBot/Latest&action=raw', 'r');
 		$data = @fgets($upfp);
 		@fclose($upfp);
                 $target = explode("!", $d[0]);
@@ -1340,7 +1340,7 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
 		if($data == $version) {
 		        $output = "LizardBot is up-to-date";
 		} else {
-		        $output = "LizardBot version {$data} is available.  Please update, or get details at http://lizardwiki.dyndns.org/wiki/LizardBot/CL#latest";
+		        $output = "LizardBot version {$data} is available.  Please update, or get details at http://fastlizard4.org/wiki/LizardBot/CL#latest";
 		}
                 fwrite($ircc, "PRIVMSG $c :" . $e . $output . "\r\n");
                 echo "-!- PRIVMSG $c :" . $e . $output . "\r\n";
@@ -1670,7 +1670,7 @@ STDOUT;
 		$uptime['current'] = gmdate('H:i:s', time() - $uptime['start']);
 		$uptime['current'] = $uptime['days'] . ' days, ' . $uptime['current'];
 		$php_os = PHP_OS;
-		$data = "I am bot {$nick}. Software: PHP-LizardBot v{$version} (http://lizardwiki.dyndns.org/wiki/LizardBot) on OS {$php_os}; Uptime: {$uptime['current']}; I have been used a total of {$totalcount} times (Commands: {$cmdcount} [Of which, {$insultcount} were insult commands], Server pings: {$pingcount}, Recognized CTCPs: {$ctcpcount}, AI calls: {$aicount}, Fishbot calls: {$fishcount}).";
+		$data = "I am bot {$nick}. Software: LizardBot for PHP v{$version} (http://fastlizard4.org/wiki/LizardBot) on OS {$php_os}; Uptime: {$uptime['current']}; I have been used a total of {$totalcount} times (Commands: {$cmdcount} [Of which, {$insultcount} were insult commands], Server pings: {$pingcount}, Recognized CTCPs: {$ctcpcount}, AI calls: {$aicount}, Fishbot calls: {$fishcount}).";
 		$target = explode("!", $d[0]);
 		$e = $target[0] . ": ";
 		if($d[2] == $nick) {
@@ -1746,7 +1746,7 @@ STDOUT;
 //				CURLOPT_PROTOCOLS      => CURLPROTO_HTTP,
 				CURLOPT_TIMEOUT        => 30            , // 30 seconds is the maximum amount of time we want to wait for this to work
 				CURLOPT_RETURNTRANSFER => TRUE          , // I would like my data back, kthx
-				CURLOPT_USERAGENT      => "PHP-LizardBot/7.2.0.0b (compatible; +http://lizardwiki.dyndns.org/wiki/LizardBot)" //Set our useragent
+				CURLOPT_USERAGENT      => "LizardBot-PHP/7.2.1.0b (compatible; +http://fastlizard4.org/wiki/LizardBot)" //Set our useragent
 				));
 			if(!$apiPipeSetoptSuccess) { // Uhoh, it looks like that, for some reason, configuration of the pipe failed.
 				$data = "For some reason, curl_setopt_array() configuration failed.  Perhaps you're running an obsolete version of PHP-cURL?  Or perhaps your version of PHP is outdated?";
