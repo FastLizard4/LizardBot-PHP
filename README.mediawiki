@@ -1,0 +1,5 @@
+= LizardBot-PHP =
+New source code repository for FastLizard4's PHP IRC bot.  Migrated from Google Code, and is the new authoritative
+location for the bot and its source code.
+
+For more information, please visit LizardBot's homepage on LizardWiki [http://fastlizard4.org/wiki/LizardBot here].
