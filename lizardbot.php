@@ -93,7 +93,7 @@ REPORT BUGS AND SUGGESTIONS TO BUGZILLA (http://scalar.cluenet.org/bugzilla)
 
 LICENSING DETAILS:
 LizardBot for PHP (IRC bot) written by FastLizard4 and the LizardBot Development Team
-Copyright (C) 2008-2010 FastLizard4 and the LizardBot Development Team
+Copyright (C) 2008-2013 FastLizard4 and the LizardBot Development Team
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
