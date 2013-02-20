@@ -31,6 +31,7 @@ function hasPriv($priv) {
 	$parsed = $d[0];
 	foreach( $users as $user => $group ) {
 		if($setUsePCREs || $setIsOnWindows) {
+			if($user == "*!*@*") continue;
 			if( preg_match( $user, $parsed/*['n!u@h']*/ ) ) {
 				if( isset( $privgroups[$group][$priv] ) ) {
 					return $privgroups[$group][$priv];
