@@ -353,7 +353,7 @@ if($setIsOnWindows) {
 		global $users, $privgroups, $dir;
 		echo "-!- Caught SIGHUP (1), now rehasing\r\n";
 		$rehash = TRUE;
-		require("default.conf.php")
+		require("default.conf.php");
 		include($dir);
 		if($setMySQLTablePre) {
 			$setMySQLTablePre .= "_";
