@@ -3,3 +3,34 @@ New source code repository for FastLizard4's PHP IRC bot.  Migrated from Google 
 location for the bot and its source code.
 
 For more information, please visit LizardBot's homepage on LizardWiki [http://fastlizard4.org/wiki/LizardBot here].
+
+== Download Information ==
+To download your very own copy of LizardBot, you may either clone this very git repository (submitting pull requests
+if you find something to improve is ''highly'' encouraged!) or download a tagged release.  When looking at tags,
+here's what to look for:
+
+*The latest development version of LizardBot is the repository HEAD.  It may or may not be tagged.
+*Stable versions are tagged by version number.  For example, ''rel7.2.0.0'' points to version 7.2.0.0 of LizardBot.
+**Note that if HEAD is a tagged revision, that effectively means that the latest development version is stable, or at least relatively so.
+
+'''Remember that development HEADs may be highly unstable, so <span style="color: #F00;">results are not guaranteed</span>!'''
+
+== Issues and Bugs ==
+If you'd like to report a bug, you may use ''either'' the GitHub issue tracker [https://github.com/FastLizard4/LizardBot-PHP/issues here]
+'''''OR''''' LizardBugs [http://fastlizard4.org/bugzilla/ here].  Please do not report the same bug in both places.  When an issue is opened
+on GitHub, someone will copy it over to BugZilla for detailed tracking and such.  However, if you open an issue directly on BugZilla, it will
+''not'' be copied over to GitHub issues.
+
+If you find a bug and want to fix it yourself, remember that pull requests are encouraged!
+
+== Licensing ==
+PHP-LizardBot (IRC Bot) by FastLizard4 and the [http://fastlizard4.org/wiki/LizardBot/Team LizardBot Dev Team]
+Copyright © 2008-2013 [https://en.wikipedia.org/wiki/User:FastLizard4 FastLizard4] and the [http://fastlizard4.org/wiki/LizardBot/Team LizardBot Dev Team] and other contributors on GitHub (see [https://github.com/FastLizard4/LizardBot-PHP/commits/master here for commit log]) - Some Rights Reserved
+
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but '''WITHOUT ANY WARRANTY'''; without even the implied warranty of '''MERCHANTABILITY''' or '''FITNESS FOR A PARTICULAR PURPOSE'''. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+
+A human-readable version of the license is available at [http://creativecommons.org/licenses/GPL/2.0/ Creative Commons], and the complete license is available [http://www.gnu.org/licenses/old-licenses/gpl-2.0.html here].
