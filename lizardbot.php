@@ -21,8 +21,36 @@ if($cfg) {
 }
 echo "Loading essential config files...\r\n";
 $rehash = TRUE;
+require("default.conf.php");
 require($dir);
 $rehash = FALSE;
+
+//Load hasPriv function
+function hasPriv($priv) {
+	global $privgroups, $users, $d, $setIsOnWindows, $setUsePCREs;
+	$parsed = $d[0];
+	foreach( $users as $user => $group ) {
+		if($setUsePCREs || $setIsOnWindows) {
+			if( preg_match( $user, $parsed/*['n!u@h']*/ ) ) {
+				if( isset( $privgroups[$group][$priv] ) ) {
+					return $privgroups[$group][$priv];
+				} else {
+					return 0;
+				}
+			}
+		} elseif (!$setUsePCREs && !$setIsOnWindows) {
+			if( fnmatch( $user, $parsed/*['n!u@h']*/ ) ) {
+				if( isset( $privgroups[$group][$priv] ) ) {
+					return $privgroups[$group][$priv];
+				} else {
+					return 0;
+				}
+			}
+		}
+	}
+	$d[0] = $parsed;
+}
+
 echo "OK!\r\n";
 if(!$setIsOnWindows) {
 	$c_n = chr(27) . "[0m";
@@ -56,7 +84,7 @@ echo $c_green;
 |_____||_______| |________||_|      |_| |_|   \__\ |____/
 
 LizardBot for PHP: IRC bot developed by FastLizard4 (who else?) and the LizardBot Development Team
-Version 7.2.1.0b (major.minor.build.revision) BETA
+Version 7.3.0.0b (major.minor.build.revision) BETA
 Licensed under the Creative Commons GNU General Public License 2.0 (GPL)
 For licensing details, contact me or read this page:
 http://creativecommons.org/licenses/GPL/2.0/
@@ -92,7 +120,7 @@ PandoraBot extension courtesy of Ttech (PHP-5 OOP)
 <?php
 //Check for updates
 echo "{$c_yellow}Checking for updates...\r\n";
-$version = "7.2.1.0b";
+$version = "7.3.0.0b";
 $upfp = @fopen('http://fastlizard4.org/w/index.php?title=LizardBot/Latest&action=raw', 'r');
 $data = @fgets($upfp);
 @fclose($upfp);
@@ -325,6 +353,7 @@ if($setIsOnWindows) {
 		global $users, $privgroups, $dir;
 		echo "-!- Caught SIGHUP (1), now rehasing\r\n";
 		$rehash = TRUE;
+		require("default.conf.php")
 		include($dir);
 		if($setMySQLTablePre) {
 			$setMySQLTablePre .= "_";
@@ -377,6 +406,7 @@ if($cfg) {
 	echo "{$c_green}Will use the user-specified config file {$dir}{$c_n}\r\n";
 }
 echo "Loading essential config files...\r\n";
+require("default.conf.php")
 require($dir);
 echo "OK!\r\n";
 echo "Verifying required settings are present...\r\n";
@@ -1050,6 +1080,7 @@ IRCO;
 		fwrite($ircc, "PRIVMSG $target :Rehashing...\r\n");
 		echo "PRIVMSG $target :Rehashing...\r\n";
 		$rehash = true;
+		require("default.conf.php")
 		include($dir);
 		if($setMySQLTablePre) {
 			$setMySQLTablePre .= "_";
@@ -1321,7 +1352,7 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
 	if($d[3] == "{$setTrigger}update" && hasPriv('*')) {
 		$cmdcount++;
 		echo "Checking for updates...\r\n";
-		$version = "7.2.1.0b";
+		$version = "7.3.0.0b";
 		$upfp = @fopen('http://fastlizard4.org/w/index.php?title=LizardBot/Latest&action=raw', 'r');
 		$data = @fgets($upfp);
 		@fclose($upfp);
@@ -1746,7 +1777,7 @@ STDOUT;
 //				CURLOPT_PROTOCOLS      => CURLPROTO_HTTP,
 				CURLOPT_TIMEOUT        => 30            , // 30 seconds is the maximum amount of time we want to wait for this to work
 				CURLOPT_RETURNTRANSFER => TRUE          , // I would like my data back, kthx
-				CURLOPT_USERAGENT      => "LizardBot-PHP/7.2.1.0b (compatible; +http://fastlizard4.org/wiki/LizardBot)" //Set our useragent
+				CURLOPT_USERAGENT      => "LizardBot-PHP/7.3.0.0b (compatible; +http://fastlizard4.org/wiki/LizardBot)" //Set our useragent
 				));
 			if(!$apiPipeSetoptSuccess) { // Uhoh, it looks like that, for some reason, configuration of the pipe failed.
 				$data = "For some reason, curl_setopt_array() configuration failed.  Perhaps you're running an obsolete version of PHP-cURL?  Or perhaps your version of PHP is outdated?";

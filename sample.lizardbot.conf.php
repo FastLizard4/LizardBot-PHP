@@ -4,6 +4,13 @@ LizardBot configuration file
 ****************************************
 *INSTRUCTIONS AREA FOR THE CONFIGURATION FILE.  READ THIS TOP SECTION COMPLETELY BEFORE
 *CONFIGURING LIZARDBOT!  IF YOU WANT TO SEE THE SETTINGS, SCROLL DOWN BELOW THIS SECTION
+*
+*NB: Settings here will override the defaults found in default.conf.php.
+*The defaults are shown here, but commented out so as to allow easy updating of the defaults
+*when a new version of the bot is released. 
+*MAKE ALL CONFIGURATION CHANGES HERE, *NOT* IN DEFAULT.CONF.PHP!
+*Remember to also change the name of this file to something other than sample.lizardbot.conf.php,
+*lizardbot.conf.php is recommended.
 Options:
 [REQUIRED]
 ##Timezone configuration
@@ -16,11 +23,12 @@ YOUR TIMEZONE IS ALREADY DEFINED IN YOUR PHP CONFIGURATION FILE.
 ##Users configuration
             $users: Set the privledged users.  See below for usage.
                     FORMAT:
-                    $users = array(
-                    	'<hostmask, first user, standard syntax>' => '<access level>'       ,
-                    	'<hostmask, last user, standard syntax>'  => '<access level>'       ,
-                    	'*!*@*'                                   => '<default access level>'
-                    )
+                    $users['<hostmask, first user, standard syntax>'] = '<access level>';
+                    $users['<hostmask, second user, standard syntax>']  = '<access level>';
+                    etc.
+                    You can redefine the default access level by doing this:
+                    $users['*!*@*']                                   = '<default access level>';
+                    
                     SPECIAL NOTE:
                     The default access level is overriden with the @mute command!
 ##Groups configuration
@@ -60,7 +68,6 @@ YOUR TIMEZONE IS ALREADY DEFINED IN YOUR PHP CONFIGURATION FILE.
                     Note that modes to be unset must always follow the modes to be set.
 
 ##Services Configuration
-    $setNSPassword: The default NickServ password
     $setNSUsername: The default NickServ username
 [OPTIONAL]
 ##CTCP Configuration
@@ -188,62 +195,60 @@ $timezone = "";
 $nickname = "";
 
 ##Users Configuration
-//	Nick!User@Host mask						=> group
-$users = array(
-	'YOUR HOSTMASK HERE'                                                     => 'root'     ,
-	'*!*@*'                                                                  => '*'
-);
+//	$users['Nick!User@Host mask']						= 'group';
+$users['YOUR HOSTMASK HERE']                                                     = 'root';
 
-##Groups configuration
+##Groups configuration.  Commented out lines below are the defaults, replicated here
+##for convenience.  Uncomment/add lines to make modifications to the defaults.
 //         [ Group       ][ Privilege     ] = 1;
-$privgroups[ 'ignore'    ]                  = 0;                      //'ignore' has no privs
+//$privgroups[ 'ignore'    ]                  = 0;                      //'ignore' has no privs
 
-$privgroups[ '*'         ][ '*'           ] = 1;                      //All basic privs
-$privgroups[ '*'         ][ 'nyse'        ] = 1;
-$privgroups[ '*'         ][ 'fantasy'     ] = 1;
-$privgroups[ '*'         ][ 'insult'      ] = 1;
-$privgroups[ '*'         ][ 'tinyurl'     ] = 1;
-$privgroups[ '*'         ][ 'bit.ly'      ] = 1;
-$privgroups[ '*'         ][ 'fish'        ] = 1;
-$pvivgroups[ '*'         ][ 'remind'      ] = 1;
+//$privgroups[ '*'         ][ '*'           ] = 1;                      //All basic privs
+//$privgroups[ '*'         ][ 'nyse'        ] = 1;
+//$privgroups[ '*'         ][ 'fantasy'     ] = 1;
+//$privgroups[ '*'         ][ 'insult'      ] = 1;
+//$privgroups[ '*'         ][ 'tinyurl'     ] = 1;
+//$privgroups[ '*'         ][ 'bit.ly'      ] = 1;
+//$privgroups[ '*'         ][ 'fish'        ] = 1;
+//$pvivgroups[ '*'         ][ 'remind'      ] = 1;
 
-$privgroups[ 's-trusted' ]                  = $privgroups['*'];       // 's-trusted' inherits '*'
-$privgroups[ 's-trusted' ][ 'fap'         ] = 1;
-$privgroups[ 's-trusted' ][ 'say'         ] = 1;
-$privgroups[ 's-trusted' ][ 'do'          ] = 1;
+//$privgroups[ 's-trusted' ]                  = $privgroups['*'];       // 's-trusted' inherits '*'
+//$privgroups[ 's-trusted' ][ 'fap'         ] = 1;
+//$privgroups[ 's-trusted' ][ 'say'         ] = 1;
+//$privgroups[ 's-trusted' ][ 'do'          ] = 1;
 
-$privgroups[ 'trusted'   ]                  = $privgroups['s-trusted'];       // 'trusted' inherits 's-trusted'
-$privgroups[ 'trusted'   ][ 'join'        ] = 1;
-$privgroups[ 'trusted'   ][ 'part'        ] = 1;
-$privgroups[ 'trusted'   ][ 'notice'      ] = 1;
-$privgroups[ 'trusted'   ][ 'oper-tyronet'] = 1;
-$privgroups[ 'trusted'   ][ 'op'          ] = 1;
+//$privgroups[ 'trusted'   ]                  = $privgroups['s-trusted'];       // 'trusted' inherits 's-trusted'
+//$privgroups[ 'trusted'   ][ 'join'        ] = 1;
+//$privgroups[ 'trusted'   ][ 'part'        ] = 1;
+//$privgroups[ 'trusted'   ][ 'notice'      ] = 1;
+//$privgroups[ 'trusted'   ][ 'oper-tyronet'] = 1;
+//$privgroups[ 'trusted'   ][ 'op'          ] = 1;
 
-$privgroups[ 'v-trusted' ]                  = $privgroups['trusted'];       // 'v-trusted' inherits 'trusted'
-$privgroups[ 'v-trusted' ][ 'mute'        ] = 1;
+//$privgroups[ 'v-trusted' ]                  = $privgroups['trusted'];       // 'v-trusted' inherits 'trusted'
+//$privgroups[ 'v-trusted' ][ 'mute'        ] = 1;
 
-$privgroups[ 'root'      ]                  = $privgroups['v-trusted']; // 'root' inherits 'v-trusted'.
-$privgroups[ 'root'      ][ 'rehash'      ] = 1;
-$privgroups[ 'root'      ][ 'die'         ] = 1;
-$privgroups[ 'root'      ][ 'raw'         ] = 1;
-$privgroups[ 'root'      ][ 'nick'        ] = 1;
-$privgroups[ 'root'      ][ 'exec'        ] = 1;
-$privgroups[ 'root'      ][ 'eval'        ] = 1;
+//$privgroups[ 'root'      ]                  = $privgroups['v-trusted']; // 'root' inherits 'v-trusted'.
+//$privgroups[ 'root'      ][ 'rehash'      ] = 1;
+//$privgroups[ 'root'      ][ 'die'         ] = 1;
+//$privgroups[ 'root'      ][ 'raw'         ] = 1;
+//$privgroups[ 'root'      ][ 'nick'        ] = 1;
+//$privgroups[ 'root'      ][ 'exec'        ] = 1;
+//$privgroups[ 'root'      ][ 'eval'        ] = 1;
 
 
 ##Pandorabot config
-$setFantasy = FALSE;
+//$setFantasy = FALSE;
 
 ##If you are on Windows, YOU MUST SET THIS TO TRUE!
-$setIsOnWindows = FALSE;
+//$setIsOnWindows = FALSE;
 #################################################
 #                    RECOMMENDED                #
 #                       BLOCK                   #
 #################################################
-    $setIdent = "LizardBot";
-    $setGecos = "LizardBot for PHP v{$version} - http://fastlizard4.org/wiki/LizardBot";
-  $setTrigger = "@";
-$setAutoModes = ""; //Remember that some IRC networks require bots to have usermode +B!  If it is required, set it here.
+//    $setIdent = "LizardBot";
+//    $setGecos = "LizardBot for PHP v{$version} - http://fastlizard4.org/wiki/LizardBot";
+//  $setTrigger = "@";
+//$setAutoModes = ""; //Remember that some IRC networks require bots to have usermode +B!  If it is required, set it here.
 
 #################################################
 #                    IDIOT LINE                 #
@@ -261,100 +266,60 @@ die(">>>PLEASE CONFIGURE THE BOT CORRECTLY!\r\n");
 #                       BLOCK                   #
 #################################################
 ##CTCP Configuration
-   $setCTCPVersion = "LizardBot for PHP (Written in PHP 5 Procedural by FastLizard4 and the LizardBot Development Team) v{$version} http://fastlizard4.org/wiki/LizardBot";
-  $setCTCPUserinfo = "LizardBot for PHP: Boldly Going Where No Bot Has Gone Before! - http://fastlizard4.org/wiki/LizardBot";
-$setUnknownCTCP_RE = NULL; //Not yet implemented
+//   $setCTCPVersion = "LizardBot for PHP (Written in PHP 5 Procedural by FastLizard4 and the LizardBot Development Team) v{$version} http://fastlizard4.org/wiki/LizardBot";
+//  $setCTCPUserinfo = "LizardBot for PHP: Boldly Going Where No Bot Has Gone Before! - http://fastlizard4.org/wiki/LizardBot";
+//$setUnknownCTCP_RE = NULL; //Not yet implemented
 
-       $setNoBolds = FALSE;
-   $setAIDefaultRE = "Probably";
+//       $setNoBolds = FALSE;
+//   $setAIDefaultRE = "Probably";
 
 ##MySQL configuration
-   $setEnableMySQL = FALSE;
- $setMySQLUserName = NULL;
- $setMySQLPassword = NULL;
-     $setMySQLHost = 'localhost';
-     $setMySQLPort = 3306;
-       $setMySQLDB = NULL;
- $setMySQLTablePre = 'lb';
+//   $setEnableMySQL = FALSE;
+// $setMySQLUserName = NULL;
+// $setMySQLPassword = NULL;
+//     $setMySQLHost = 'localhost';
+//     $setMySQLPort = 3306;
+//       $setMySQLDB = NULL;
+// $setMySQLTablePre = 'lb';
 
-  $setNSPassword = NULL; //No longer implemented
-  $setNSUsername = NULL;
+//  $setNSPassword = NULL; //No longer implemented
+//  $setNSUsername = NULL;
 
 ##Misc configuration
-  $setEnableExec = FALSE;
-  $setEnableEval = FALSE;
+//  $setEnableExec = FALSE;
+//  $setEnableEval = FALSE;
 
- $setTrustGoogle = TRUE;
+// $setTrustGoogle = TRUE;
 
-    $setUsePCREs = FALSE;
+//    $setUsePCREs = FALSE;
 
- $setInsultUsers = TRUE;
+// $setInsultUsers = TRUE;
 
-$setEnableDelays = FALSE;
+//$setEnableDelays = FALSE;
 
-$setEnableFishbot = FALSE;
+//$setEnableFishbot = FALSE;
 
-$setEnableAllTriggerHelp = TRUE;
+//$setEnableAllTriggerHelp = TRUE;
 
-$setEnableReminders = TRUE;
-   $setRemindOnJoin = FALSE;
+//$setEnableReminders = TRUE;
+//   $setRemindOnJoin = FALSE;
 
-  $setEnableBitly = FALSE;
-$setBitlyAPISleep = 30;
-   $setBitlyLogin = '';
-  $setBitlyAPIKey = '';
+//  $setEnableBitly = FALSE;
+//$setBitlyAPISleep = 30;
+//   $setBitlyLogin = '';
+//  $setBitlyAPIKey = '';
 
 #################################################
 #                   AUTOCONNECT                 #
 #                       BLOCK                   #
 #################################################
 if(!$rehash) { //Don't touch this line, else you risk exposing your password
- $autoconnect['enabled'] = FALSE;
- $autoconnect['network'] = NULL;
-    $autoconnect['nick'] = NULL;
-$autoconnect['identify'] = NULL;
- $autoconnect['id-nick'] = NULL;
- $autoconnect['id-pass'] = NULL;
-$autoconnect['channels'] = NULL;
+// $autoconnect['enabled'] = FALSE;
+// $autoconnect['network'] = NULL;
+//    $autoconnect['nick'] = NULL;
+//$autoconnect['identify'] = NULL;
+// $autoconnect['id-nick'] = NULL;
+// $autoconnect['id-pass'] = NULL;
+//$autoconnect['channels'] = NULL;
 } //Don't touch this line, else you risk exposing your password
-/****************************************
-SYSTEM DEFINED FUNCTIONS - ALL SETINGS MUST GO ABOVE THIS!
-*****************************************/ 
-if(!$rehash) {
-	function hasPriv($priv) {
-		global $privgroups, $users, $d, $setIsOnWindows, $setUsePCREs;
-		$parsed = $d[0];
-		foreach( $users as $user => $group ) {
-			if($setUsePCREs || $setIsOnWindows) {
-				if( preg_match( $user, $parsed/*['n!u@h']*/ ) ) {
-					if( isset( $privgroups[$group][$priv] ) ) {
-						return $privgroups[$group][$priv];
-					} else {
-						return 0;
-					}
-				}
-			} elseif (!$setUsePCREs && !$setIsOnWindows) {
-				if( fnmatch( $user, $parsed/*['n!u@h']*/ ) ) {
-					if( isset( $privgroups[$group][$priv] ) ) {
-						return $privgroups[$group][$priv];
-					} else {
-						return 0;
-					}
-				}
-			}
-		}
-		$d[0] = $parsed;
-	}
-/*	function showPriv() {
-		global $privgroups, $users, $d;
-		$parsed = $d[0];
-		foreach( $users as $user => $group ) {
-			if( fnmatch( $user, $parsed/*['n!u@h'] ) ) {
-				return "$group";
-			} else {
-				return "Error getting priv";
-			}
-		}
-	} */
-}
 ?>
