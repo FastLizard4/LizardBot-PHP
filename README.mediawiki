@@ -15,6 +15,13 @@ here's what to look for:
 
 '''Remember that development HEADs may be highly unstable, so <span style="color: #F00;">results are not guaranteed</span>!'''
 
+=== Branches ===
+In general, you should always download your LizardBot from the master branch.  Other branches may exist, but usually only temporarily
+for testing different features without breaking the main bot.  If you are interested in helping to test out those features, take a look
+at that branch's README to see what it's about, and check it out if you want!  Similarly, you will only find tagged releases on the master branch.
+
+Expect branches other than master to be '''HIGHLY''' unstable!
+
 == Issues and Bugs ==
 If you'd like to report a bug, you may use ''either'' the GitHub issue tracker [https://github.com/FastLizard4/LizardBot-PHP/issues here]
 '''''OR''''' LizardBugs [http://fastlizard4.org/bugzilla/ here].  Please do not report the same bug in both places.  When an issue is opened
