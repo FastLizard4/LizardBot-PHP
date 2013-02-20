@@ -406,7 +406,7 @@ if($cfg) {
 	echo "{$c_green}Will use the user-specified config file {$dir}{$c_n}\r\n";
 }
 echo "Loading essential config files...\r\n";
-require("default.conf.php")
+require("default.conf.php");
 require($dir);
 echo "OK!\r\n";
 echo "Verifying required settings are present...\r\n";
