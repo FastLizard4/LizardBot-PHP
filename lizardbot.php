@@ -1080,7 +1080,7 @@ IRCO;
 		fwrite($ircc, "PRIVMSG $target :Rehashing...\r\n");
 		echo "PRIVMSG $target :Rehashing...\r\n";
 		$rehash = true;
-		require("default.conf.php")
+		require("default.conf.php");
 		include($dir);
 		if($setMySQLTablePre) {
 			$setMySQLTablePre .= "_";
