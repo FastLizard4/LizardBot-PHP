@@ -1131,7 +1131,7 @@ in PHP 5 Procedural.  I work on both Windows and *Nix systems with PHP installed
 	if($d[3] == "{$setTrigger}nyse" && hasPriv('nyse')) {
 		$cmdcount++;
 		$symbol = $d[4];
-		$url = sprintf('http://quote.yahoo.com/d/quotes.csv?s=%s&f=nl1c6k2t1vp', $symbol);
+		$url = sprintf('http://quote.yahoo.com/d/quotes.csv?s=%s&f=nl1c6k2t1vp', urlencode($symbol));
 		echo "-!- Getting quote for $symbol\r\n";
 		$quoteurl = @fopen($url, 'r') OR $data = "Error connecting to Yahoo!";
 		$read = fgetcsv($quoteurl);
