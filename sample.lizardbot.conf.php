@@ -199,8 +199,10 @@ $nickname = "";
 $users['YOUR HOSTMASK HERE']                                                     = 'root';
 
 ##Groups configuration.  Commented out lines below are the defaults, replicated here
-##for convenience.  Uncomment/add lines to make modifications to the defaults.
-//         [ Group       ][ Privilege     ] = 1;
+##for convenience.  If you change the groups, please uncomment everything here, including
+##the line to unset $privgroups.  Not doing this may cause unexpected things to happen.
+//unset($privgroups);
+//         [ Group       ][ Privilege     ] = 1; Don't uncomment this line.
 //$privgroups[ 'ignore'    ]                  = 0;                      //'ignore' has no privs
 
 //$privgroups[ '*'         ][ '*'           ] = 1;                      //All basic privs
