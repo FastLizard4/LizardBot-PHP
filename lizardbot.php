@@ -84,12 +84,16 @@ echo $c_green;
 | |___  __| |__   ___/ /__ | |______| | | |  \  \  | |_| |
 |_____||_______| |________||_|      |_| |_|   \__\ |____/
 
+           -=- http://fastlizard4.org/wiki/LizardBot -=-
+
 LizardBot for PHP: IRC bot developed by FastLizard4 (who else?) and the LizardBot Development Team
 Version 7.3.0.0b (major.minor.build.revision) BETA
-Licensed under the Creative Commons GNU General Public License 2.0 (GPL)
+Licensed under the General Public License 2.0 (GPL) or later at your option
 For licensing details, contact me or read this page:
 http://creativecommons.org/licenses/GPL/2.0/
-REPORT BUGS AND SUGGESTIONS TO BUGZILLA (http://scalar.cluenet.org/bugzilla)
+*Report bugs to BugZilla at http://fastlizard4.org/bugzilla/
+*You may also report issues or submit your own patches at GitHub:
+https://github.com/FastLizard4/LizardBot-PHP
 
 LICENSING DETAILS:
 LizardBot for PHP (IRC bot) written by FastLizard4 and the LizardBot Development Team
@@ -105,19 +109,13 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 A human-readable version of the complete license is available at
 http://creativecommons.org/licenses/GPL/2.0/
+The full text of the license can be found here:
+http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
 PandoraBot extension courtesy of Ttech (PHP-5 OOP)
-<?php echo $c_blue; ?>
-*******************************************************************************
-*KNOWN ISSUES WITH THE BOT:
- 1. Private messages may not work as expected.
- 2. No logging functions (may be implemented some time in the future)
-*******************************************************************************
+*************************************************************************************
 <?php
 //Check for updates
 echo "{$c_yellow}Checking for updates...\r\n";
@@ -129,9 +127,11 @@ if(!$data) {
 echo "{$_bold}Check for updates failed!{$c_n}\r\n";
 }
 if($data == $version) {
-	echo "{$c_green}>>>>You have the latest version, {$version}<<<<{$c_n}\r\n";
+	echo "{$c_green}>>>>You have the stable latest version, {$version}<<<<{$c_n}\r\n";
 } else {
 	echo "{$c_red}>>>>You do not have the latest version, {$data}<<<<{$c_n}\r\n";
+	echo "{$c_red}This could mean that you're running an older version, or a newer\r\n";
+	echo "not yet stable version....{$c_n}\r\n";
 }
 /**********************************************
 BEGIN PANDORABOT
