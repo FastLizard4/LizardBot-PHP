@@ -32,7 +32,7 @@ If you find a bug and want to fix it yourself, remember that pull requests are e
 
 == Licensing ==
 PHP-LizardBot (IRC Bot) by FastLizard4 and the [http://fastlizard4.org/wiki/LizardBot/Team LizardBot Dev Team]
-Copyright © 2008-2013 [https://en.wikipedia.org/wiki/User:FastLizard4 FastLizard4] and the [http://fastlizard4.org/wiki/LizardBot/Team LizardBot Dev Team] and other contributors on GitHub (see [https://github.com/FastLizard4/LizardBot-PHP/commits/master here for commit log]) - Some Rights Reserved
+Copyright ï¿½ 2008-2013 [https://en.wikipedia.org/wiki/User:FastLizard4 FastLizard4] and the [http://fastlizard4.org/wiki/LizardBot/Team LizardBot Dev Team] and other contributors on GitHub (see [https://github.com/FastLizard4/LizardBot-PHP/commits/master here for commit log]) - Some Rights Reserved
 
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
 
@@ -40,4 +40,4 @@ This program is distributed in the hope that it will be useful, but '''WITHOUT A
 
 You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-A human-readable version of the license is available at [http://creativecommons.org/licenses/GPL/2.0/ Creative Commons], and the complete license is available [http://www.gnu.org/licenses/old-licenses/gpl-2.0.html here].
+The complete license is available [http://www.gnu.org/licenses/old-licenses/gpl-2.0.html here].
